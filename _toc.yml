@@ -1,0 +1,17 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: intro
+chapters:
+- file: installation
+- file: 1_Experimental_Variogram
+- file: 2_Variogram_model
+- file: 3_Simple_kriging_and_ordinary_kriging
+- file: 4_Sequential_Gaussian_Simulation
+- file: 5_interpolation_with_anisotropy
+- file: 6_non-stationary_SGS_example1
+- file: 7_non-stationary_SGS_example2
+- file: 8_interpolation_with_a_trend
+- file: 9_cokriging_and_cosimulation_MM1
+
