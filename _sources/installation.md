@@ -21,19 +21,13 @@ The package can be installed directly with `pip` or from GitHub.
 
 GStatSim can be installed using the `pip` command:
 
-```{code-cell}
-:tags: [hide-output]
-pip install gstatsim
-```
+`pip install gstatsim`
 
 ## GitHub
 
 The most recent version can be installed from GitHub via:
 
-```{code-cell}
-:tags: [hide-output]
-git clone https://github.com/GatorGlaciology/GStatSim
-```
+`git clone https://github.com/GatorGlaciology/GStatSim`
 
 
 ## Package dependencies
