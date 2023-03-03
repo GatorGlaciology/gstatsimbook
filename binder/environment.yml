@@ -8,6 +8,7 @@ dependencies:
   - pandas 
   - pip
   - scikit-learn
+  - scikit-gstat
   - tqdm
   - pip:
     - gstatsim
