@@ -1,0 +1,14 @@
+name: gstatsim
+channels:
+  - conda-forge
+dependencies:
+  - python=3.10
+  - matplotlib-base
+  - numpy
+  - pandas 
+  - pip
+  - scikit-learn
+  - scikit-gstat
+  - tqdm
+  - pip:
+    - gstatsim
