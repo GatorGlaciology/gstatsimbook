@@ -54,7 +54,6 @@ const thebe_selector_output = ".output, .cell_output"
     <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Interpolation with a trend" href="8_interpolation_with_a_trend.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -114,7 +113,7 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <ul class="current nav bd-sidenav">
+        <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="installation.html">
    Installation
@@ -141,27 +140,32 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="5_interpolation_with_anisotropy.html">
+  <a class="reference internal" href="5_Variogram_interpolation_comparison.html">
+   Interpolation comparison using different variogram models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_interpolation_with_anisotropy.html">
    Interpolation with anisotropy
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="6_non-stationary_SGS_example1.html">
+  <a class="reference internal" href="7_non-stationary_SGS_example1.html">
    Non-stationary SGS with k-means clustering
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="7_non-stationary_SGS_example2.html">
+  <a class="reference internal" href="8_non-stationary_SGS_example2.html">
    Non-stationary SGS with adaptive partitioning
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="8_interpolation_with_a_trend.html">
+  <a class="reference internal" href="9_interpolation_with_a_trend.html">
    Interpolation with a trend
   </a>
  </li>
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
+ <li class="toctree-l1">
+  <a class="reference internal" href="10_cokriging_and_cosimulation_MM1.html">
    Co-kriging and co-SGS with Markov Model 1 (MM1)
   </a>
  </li>
@@ -372,6 +376,11 @@ title="Print to PDF"
     <nav id="bd-toc-nav" aria-label="Page">
         <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gator-glaciology-lab-university-of-florida">
+   Gator Glaciology Lab, University of Florida
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#markov-model-1-mm1">
    Markov Model 1 (MM1)
   </a>
@@ -436,6 +445,11 @@ title="Print to PDF"
                         <nav aria-label="Page">
                             <ul class="visible nav section-nav flex-column">
  <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#gator-glaciology-lab-university-of-florida">
+   Gator Glaciology Lab, University of Florida
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
   <a class="reference internal nav-link" href="#markov-model-1-mm1">
    Markov Model 1 (MM1)
   </a>
@@ -490,8 +504,11 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="co-kriging-and-co-sgs-with-markov-model-1-mm1">
+  <img src ="Images/GatorGlaciologyLogo-01.jpg" width="100" align = "right">
+<section class="tex2jax_ignore mathjax_ignore" id="co-kriging-and-co-sgs-with-markov-model-1-mm1">
 <h1>Co-kriging and co-SGS with Markov Model 1 (MM1)<a class="headerlink" href="#co-kriging-and-co-sgs-with-markov-model-1-mm1" title="Permalink to this headline">#</a></h1>
+<section id="gator-glaciology-lab-university-of-florida">
+<h2>Gator Glaciology Lab, University of Florida<a class="headerlink" href="#gator-glaciology-lab-university-of-florida" title="Permalink to this headline">#</a></h2>
 <p>We often have more extensively sampled secondary data that can provide some constraint on interpolations. For example, here we examine the case where there is ice surface elevation data that correlates with bed elevation. Unlike with bed measurements, the ice surface elevation is known at all locations. So if the ice surface and bed elevation are related, how do we use the ice surface to help improve our interpolations?</p>
 <p>To answer this question, we can use co-kriging or co-SGS, which are the multivariate forms of kriging and SGS, respectively. While kriging computes interpolated values as the weighted sum of nearby meausurements, co-kriging uses the weighted sum of measurements from both variables. So co-kriging and co-SGS must account for the spatial relationships within and between both the primary and secondary data. This means that, in theory, one must compute the primary variogram (for the bed elevation data), the secondary variogram (for ice surface elevation), and the cross variogram. The cross variogram describes the spatial relationship between two variables:</p>
 <div class="math notranslate nohighlight">
@@ -501,6 +518,7 @@ title="Print to PDF"
 <p>where <span class="math notranslate nohighlight">\(x\)</span> is a spatial location, <span class="math notranslate nohighlight">\(Z_1\)</span> is the primary variable (bed elevation), <span class="math notranslate nohighlight">\(Z_2\)</span> is the secondary variable (ice surface elevation) and <span class="math notranslate nohighlight">\(N\)</span> is the number of lag distances. However, using all of these different variograms can lead to very large, unstable systems of equations that are difficult to solve.</p>
 <p>So in practice, people only use the nearest neighbor secondary point to the grid cell being estimated. Usually the nearest neighbor secondary data value is co-located with the grid cell of interest, meaning it is at the same location. So this approach is often referred to as collocated co-kriging or co-simulation.</p>
 <p>This simplification requires an assumption of conditional independence (a Markov assumption). There are two possible Markov models, referred to as Markov Models 1 and 2, respectively. Markov Model 1 is the most straightforward option to model, so we use this version in our package.</p>
+</section>
 <section id="markov-model-1-mm1">
 <h2>Markov Model 1 (MM1)<a class="headerlink" href="#markov-model-1-mm1" title="Permalink to this headline">#</a></h2>
 <p>MM1 makes the following assumption of conditional independence:</p>
@@ -527,15 +545,29 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">from</span> <span class="nn">matplotlib.colors</span> <span class="kn">import</span> <span class="n">LightSource</span>
+<span class="kn">from</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">import</span> <span class="n">imshow</span>
 <span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">QuantileTransformer</span> 
 <span class="kn">import</span> <span class="nn">skgstat</span> <span class="k">as</span> <span class="nn">skg</span>
 <span class="kn">from</span> <span class="nn">skgstat</span> <span class="kn">import</span> <span class="n">models</span>
-<span class="kn">import</span> <span class="nn">gstatsim</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="kn">import</span> <span class="nn">GStatSim</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="nn">et</span>
+<span class="kn">import</span> <span class="nn">earthpy.spatial</span> <span class="k">as</span> <span class="nn">es</span>
+<span class="kn">import</span> <span class="nn">earthpy.plot</span> <span class="k">as</span> <span class="nn">ep</span>
 <span class="kn">import</span> <span class="nn">random</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">ModuleNotFoundError</span><span class="g g-Whitespace">                       </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">3</span><span class="n">d</span><span class="o">/</span><span class="n">s79lt6q910z0whw_7c_z48lc0000gp</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_21622</span><span class="o">/</span><span class="mf">3577745124.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span> <span class="kn">import</span> <span class="nn">skgstat</span> <span class="k">as</span> <span class="nn">skg</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span> <span class="kn">from</span> <span class="nn">skgstat</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="ne">----&gt; </span><span class="mi">9</span> <span class="kn">import</span> <span class="nn">GStatSim</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span> <span class="kn">import</span> <span class="nn">earthpy</span> <span class="k">as</span> <span class="nn">et</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span> <span class="kn">import</span> <span class="nn">earthpy.spatial</span> <span class="k">as</span> <span class="nn">es</span>
 
-<span class="c1"># plotting utility functions</span>
-<span class="kn">from</span> <span class="nn">plot_utils</span> <span class="kn">import</span> <span class="n">splot2D</span><span class="p">,</span> <span class="n">mplot1</span><span class="p">,</span> <span class="n">mplot2_std</span><span class="p">,</span> <span class="n">make_colorbar</span>
+<span class="ne">ModuleNotFoundError</span>: No module named &#39;GStatSim&#39;
 </pre></div>
 </div>
 </div>
@@ -549,12 +581,23 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="n">df_bed</span> <span class="o">=</span> <span class="n">df_bed</span><span class="p">[</span><span class="n">df_bed</span><span class="p">[</span><span class="s2">&quot;Bed&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">700</span><span class="p">]</span>  <span class="c1"># remove erroneously high values, presumably due to bad bed picks</span>
 
 <span class="c1"># plot original data</span>
-<span class="n">splot2D</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df_bed</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original bed data&#39;</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span><span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">c</span> <span class="o">=</span> <span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;Bed&#39;</span><span class="p">],</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">,</span> 
+                 <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;gist_earth&#39;</span><span class="p">)</span>       <span class="c1"># scatter plot for location map</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Original Bed Data&#39;</span><span class="p">)</span>                                    <span class="c1"># add plot title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>                          <span class="c1"># set axis labels</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span> <span class="c1"># add vertical color bar</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Bed (m)&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>      <span class="c1"># add labels to the color bar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_3_0.png" src="_images/9_cokriging_and_cosimulation_MM1_3_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;function matplotlib.pyplot.show(close=None, block=None)&gt;
+</pre></div>
+</div>
+<img alt="_images/9_cokriging_and_cosimulation_MM1_3_1.png" src="_images/9_cokriging_and_cosimulation_MM1_3_1.png" />
 </div>
 </div>
 </section>
@@ -562,7 +605,7 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <h2>Load and plot secondary data<a class="headerlink" href="#load-and-plot-secondary-data" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_surface</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/greenland_surface_data.csv&#39;</span><span class="p">)</span> <span class="c1"># download data</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_surface</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;Data/greenland_surface_data.csv&#39;</span><span class="p">)</span> <span class="c1"># download data</span>
 
 <span class="c1"># make hillshade plot for visualizing</span>
 <span class="n">res</span> <span class="o">=</span> <span class="mi">200</span>
@@ -575,25 +618,30 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="n">elevation</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">df_surface</span><span class="p">[</span><span class="s1">&#39;Surface&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">xlen</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">ylen</span><span class="p">)))</span>
 <span class="n">elevation</span> <span class="o">=</span> <span class="n">elevation</span><span class="o">.</span><span class="n">T</span> 
 
-<span class="c1"># Shade from the northeast, with the sun 45 degrees from horizontal</span>
-<span class="n">ls</span> <span class="o">=</span> <span class="n">LightSource</span><span class="p">(</span><span class="n">azdeg</span><span class="o">=</span><span class="mi">45</span><span class="p">,</span> <span class="n">altdeg</span><span class="o">=</span><span class="mi">45</span><span class="p">)</span>
+<span class="n">hillshade</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">hillshade</span><span class="p">(</span><span class="n">elevation</span><span class="p">,</span> <span class="n">azimuth</span> <span class="o">=</span> <span class="mi">210</span><span class="p">,</span> <span class="n">altitude</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># hillshade</span>
 
-<span class="c1"># leaving the dx and dy as 1 means a vertical exageration equal to dx/dy</span>
-<span class="n">hillshade</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">hillshade</span><span class="p">(</span><span class="n">elevation</span><span class="p">,</span> <span class="n">vert_exag</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-
-<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">elevation</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">2500</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_earth&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hillshade</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;Greys&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;RBF trend&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X [px]&#39;</span><span class="p">);</span> <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y [px]&#39;</span><span class="p">)</span>
-<span class="n">cbar</span> <span class="o">=</span> <span class="n">make_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="mi">500</span><span class="p">,</span> <span class="mi">2500</span><span class="p">,</span> <span class="s1">&#39;Ice surface [m]&#39;</span><span class="p">)</span>
-<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ep</span><span class="o">.</span><span class="n">plot_bands</span><span class="p">(</span>
+    <span class="n">elevation</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;cividis&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Ice surface&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="mi">500</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">2500</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hillshade</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
 <img alt="_images/9_cokriging_and_cosimulation_MM1_5_0.png" src="_images/9_cokriging_and_cosimulation_MM1_5_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#fig.savefig(&#39;Figures/surface_data.jpg&#39;, dpi=300, bbox_inches = &quot;tight&quot;)</span>
+</pre></div>
+</div>
 </div>
 </div>
 </section>
@@ -664,30 +712,42 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot normalized co-located data</span>
-<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>    
-<span class="n">im</span> <span class="o">=</span> <span class="n">ax1</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_earth&#39;</span><span class="p">,</span> 
-                 <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Normalized Bed&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">);</span> <span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cbar</span> <span class="o">=</span> <span class="n">make_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">clabel</span><span class="o">=</span><span class="s1">&#39;Bed [m]&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax1</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">121</span><span class="p">)</span>     
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">],</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;gist_earth&#39;</span><span class="p">,</span> 
+                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>       <span class="c1"># scatter plot for location map</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized Bed&#39;</span><span class="p">)</span>                                    <span class="c1"># add plot title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">)</span>                                                   <span class="c1"># set axis labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span> <span class="c1"># add vertical color bar</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Bed&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>      <span class="c1"># add labels to the color bar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
 
-<span class="n">im</span> <span class="o">=</span> <span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df_colocated</span><span class="p">[</span><span class="s1">&#39;colocated&#39;</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_earth&#39;</span><span class="p">,</span> 
-                 <span class="n">s</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Normalized co-located surface&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">);</span> <span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-<span class="n">cbar</span> <span class="o">=</span> <span class="n">make_colorbar</span><span class="p">(</span><span class="n">fig</span><span class="p">,</span> <span class="n">im</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">clabel</span><span class="o">=</span><span class="s1">&#39;Surface [m]&#39;</span><span class="p">,</span> <span class="n">ax</span><span class="o">=</span><span class="n">ax2</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">122</span><span class="p">)</span> 
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span><span class="n">c</span><span class="o">=</span><span class="n">df_colocated</span><span class="p">[</span><span class="s1">&#39;colocated&#39;</span><span class="p">],</span><span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span><span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;cividis&#39;</span><span class="p">,</span> 
+                 <span class="n">alpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">)</span>       <span class="c1"># scatter plot for location map</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Normalized co-located surface&#39;</span><span class="p">)</span>                                    <span class="c1"># add plot title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">)</span>                                                   <span class="c1"># set axis labels</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span> <span class="c1"># add vertical color bar</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Surface&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>      <span class="c1"># add labels to the color bar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_12_0.png" src="_images/9_cokriging_and_cosimulation_MM1_12_0.png" />
+<img alt="_images/9_cokriging_and_cosimulation_MM1_13_0.png" src="_images/9_cokriging_and_cosimulation_MM1_13_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#fig.savefig(&#39;Figures/colocated_surface_data.jpg&#39;, dpi=300, bbox_inches = &quot;tight&quot;)</span>
+</pre></div>
+</div>
 </div>
 </div>
 <div class="cell docutils container">
@@ -708,18 +768,21 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># scatter plot</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
-<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">],</span> <span class="n">df_colocated</span><span class="p">[</span><span class="s1">&#39;colocated&#39;</span><span class="p">],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Bed vs. surface&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Normalized bed&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">],</span><span class="n">df_colocated</span><span class="p">[</span><span class="s1">&#39;colocated&#39;</span><span class="p">],</span><span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span><span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Bed vs. surface&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Normalized bed&#39;</span><span class="p">)</span>                                                   <span class="c1"># set axis labels</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Normalized surface&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wspace</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">hspace</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_14_0.png" src="_images/9_cokriging_and_cosimulation_MM1_14_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-5.719271340871025, 5.719271340968869, -5.632308154734274, 3.8930444320971134)
+</pre></div>
+</div>
+<img alt="_images/9_cokriging_and_cosimulation_MM1_16_1.png" src="_images/9_cokriging_and_cosimulation_MM1_16_1.png" />
 </div>
 </div>
 <p>Note that the scatter plot must be homoscedastic. In other words, if it looks like the strength of the correlation changes throughout the plot, then the secondary data shouldn’t be used. <span class="math notranslate nohighlight">\(Z_1\)</span> and <span class="math notranslate nohighlight">\(Z_2\)</span> must be linearly related for cokriging and cosimulation to work.</p>
@@ -742,23 +805,28 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <section id="cokriging">
 <h2>Cokriging<a class="headerlink" href="#cokriging" title="Permalink to this headline">#</a></h2>
 <p>To perform cokriging, just enter the primary variogram and correlation coefficient parameters into the cokrige_mm1 function:</p>
-<div class="cell tag_remove-output docutils container">
+<div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set variogram parameters</span>
 <span class="n">azimuth</span> <span class="o">=</span> <span class="mi">0</span>
 <span class="n">nugget</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
-
 <span class="c1"># the major and minor ranges are the same in this example because it is isotropic</span>
 <span class="n">major_range</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">minor_range</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">sill</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> 
-<span class="n">vario</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nugget</span><span class="p">,</span> <span class="n">major_range</span><span class="p">,</span> <span class="n">minor_range</span><span class="p">,</span> <span class="n">sill</span><span class="p">]</span>
+<span class="n">vtype</span> <span class="o">=</span> <span class="s1">&#39;Exponential&#39;</span>
+<span class="n">vario</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nugget</span><span class="p">,</span> <span class="n">major_range</span><span class="p">,</span> <span class="n">minor_range</span><span class="p">,</span> <span class="n">sill</span><span class="p">,</span> <span class="n">vtype</span><span class="p">]</span> <span class="c1"># save variogram parameters as a list</span>
 
-<span class="n">k</span> <span class="o">=</span> <span class="mi">100</span>         <span class="c1"># number of neighboring data points used to estimate a given point </span>
-<span class="n">rad</span> <span class="o">=</span> <span class="mi">50000</span>     <span class="c1"># 50 km search radius</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">100</span> <span class="c1"># number of neighboring data points used to estimate a given point </span>
+<span class="n">rad</span> <span class="o">=</span> <span class="mi">50000</span> <span class="c1"># 50 km search radius</span>
 
 <span class="n">est_cokrige</span><span class="p">,</span> <span class="n">var_cokrige</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">cokrige_mm1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nbed&#39;</span><span class="p">,</span> 
                                      <span class="n">df_surface_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nsurf&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">corrcoef</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████| 22500/22500 [04:12&lt;00:00, 89.04it/s]
 </pre></div>
 </div>
 </div>
@@ -783,12 +851,38 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mplot1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">cokrige_pred_trans</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Co-kriging with MM1&#39;</span><span class="p">,</span> <span class="n">hillshade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make hillshade plot for visualizing</span>
+
+<span class="c1"># reshape grid</span>
+<span class="n">ylen</span> <span class="o">=</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">+</span> <span class="n">res</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="n">res</span>
+<span class="n">xlen</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">+</span> <span class="n">res</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="n">res</span>
+<span class="n">elevation</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">cokrige_pred_trans</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ylen</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xlen</span><span class="p">)))</span>
+<span class="n">elevation</span> <span class="o">=</span> <span class="n">elevation</span> 
+
+<span class="n">hillshade</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">hillshade</span><span class="p">(</span><span class="n">elevation</span><span class="p">,</span> <span class="n">azimuth</span> <span class="o">=</span> <span class="mi">210</span><span class="p">,</span> <span class="n">altitude</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># hillshade</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ep</span><span class="o">.</span><span class="n">plot_bands</span><span class="p">(</span>
+    <span class="n">elevation</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gist_earth&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Co-kriging with MM1&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hillshade</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_21_0.png" src="_images/9_cokriging_and_cosimulation_MM1_21_0.png" />
+<img alt="_images/9_cokriging_and_cosimulation_MM1_23_0.png" src="_images/9_cokriging_and_cosimulation_MM1_23_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#fig.savefig(&#39;Figures/cokriging.jpg&#39;, dpi=300, bbox_inches = &quot;tight&quot;)</span>
+</pre></div>
+</div>
 </div>
 </div>
 <p>Compared to the simple and ordinary kriging estimates, the elevation on the right side of the map is visibly higher. This is because the surface elevation data slopes upward to the right, which pulls the interpolated topography upwards.</p>
@@ -800,12 +894,12 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cosim</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">cosim_mm1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nbed&#39;</span><span class="p">,</span> 
-                                     <span class="n">df_surface_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nsurf&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">corrcoef</span><span class="p">)</span>
+                                     <span class="n">df_surface_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nsurf&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario</span><span class="p">,</span> <span class="n">rad</span><span class="p">,</span> <span class="n">corrcoef</span><span class="p">)</span> 
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|████████████████████████████████████| 22500/22500 [03:40&lt;00:00, 101.84it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████| 22500/22500 [05:28&lt;00:00, 68.41it/s]
 </pre></div>
 </div>
 </div>
@@ -821,12 +915,38 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mplot1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">cosim_trans</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Co-simulation with MM1&#39;</span><span class="p">,</span> <span class="n">hillshade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make hillshade plot for visualizing</span>
+
+<span class="c1"># reshape grid</span>
+<span class="n">ylen</span> <span class="o">=</span> <span class="p">(</span><span class="n">ymax</span> <span class="o">+</span> <span class="n">res</span> <span class="o">-</span> <span class="n">ymin</span><span class="p">)</span><span class="o">/</span><span class="n">res</span>
+<span class="n">xlen</span> <span class="o">=</span> <span class="p">(</span><span class="n">xmax</span> <span class="o">+</span> <span class="n">res</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">)</span><span class="o">/</span><span class="n">res</span>
+<span class="n">elevation</span> <span class="o">=</span>  <span class="n">np</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">cosim_trans</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">ylen</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">xlen</span><span class="p">)))</span>
+<span class="n">elevation</span> <span class="o">=</span> <span class="n">elevation</span> 
+
+<span class="n">hillshade</span> <span class="o">=</span> <span class="n">es</span><span class="o">.</span><span class="n">hillshade</span><span class="p">(</span><span class="n">elevation</span><span class="p">,</span> <span class="n">azimuth</span> <span class="o">=</span> <span class="mi">210</span><span class="p">,</span> <span class="n">altitude</span> <span class="o">=</span> <span class="mi">10</span><span class="p">)</span> <span class="c1"># hillshade</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">ep</span><span class="o">.</span><span class="n">plot_bands</span><span class="p">(</span>
+    <span class="n">elevation</span><span class="p">,</span>
+    <span class="n">ax</span><span class="o">=</span><span class="n">ax</span><span class="p">,</span>
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;gist_earth&quot;</span><span class="p">,</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Co-simulation with MM1&quot;</span><span class="p">,</span>
+    <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">600</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">hillshade</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Greys&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_25_0.png" src="_images/9_cokriging_and_cosimulation_MM1_25_0.png" />
+<img alt="_images/9_cokriging_and_cosimulation_MM1_28_0.png" src="_images/9_cokriging_and_cosimulation_MM1_28_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#fig.savefig(&#39;Figures/cosimulation.jpg&#39;, dpi=300, bbox_inches = &quot;tight&quot;)</span>
+</pre></div>
+</div>
 </div>
 </div>
 <p>Looks good! Compared to the previous simulation examples, the topography on the right is higher elevation.</p>
@@ -837,12 +957,13 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># variogram comparison</span>
-<span class="c1"># downsample random indices to speed this up</span>
-<span class="n">rand_indices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span><span class="mi">5000</span><span class="p">)</span>
 
-<span class="c1"># get normalized cosimulation data</span>
+<span class="c1"># downsample random indices to speed this up</span>
+<span class="n">rand_indices</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">shape</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">)[</span><span class="mi">0</span><span class="p">]),</span><span class="mi">5000</span><span class="p">)</span> <span class="c1"># generate random numbers to keep</span>
+
 <span class="n">coords_s</span> <span class="o">=</span> <span class="n">Pred_grid_xy</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">]</span>
-<span class="n">values_s</span> <span class="o">=</span> <span class="n">cosim</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">]</span>
+<span class="n">values_s</span> <span class="o">=</span> <span class="n">cosim</span><span class="p">[</span><span class="n">rand_indices</span><span class="p">]</span>  <span class="c1"># notice that we&#39;re using the simulated topography values prior to back transformation </span>
+<span class="c1">#because the experimental variogram was computed on normalized data</span>
 
 <span class="n">VS</span> <span class="o">=</span> <span class="n">skg</span><span class="o">.</span><span class="n">Variogram</span><span class="p">(</span><span class="n">coords_s</span><span class="p">,</span> <span class="n">values_s</span><span class="p">,</span> <span class="n">bin_func</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">n_lags</span> <span class="o">=</span> <span class="n">n_lags</span><span class="p">,</span> 
                    <span class="n">maxlag</span> <span class="o">=</span> <span class="n">maxlag</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -864,18 +985,20 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="n">xs</span> <span class="o">=</span> <span class="n">VS</span><span class="o">.</span><span class="n">bins</span>
 <span class="n">ys</span> <span class="o">=</span> <span class="n">VS</span><span class="o">.</span><span class="n">experimental</span>
 
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xe</span><span class="p">,</span> <span class="n">ye</span><span class="p">,</span> <span class="s1">&#39;og&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Variogram of data&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span> <span class="n">ys</span><span class="p">,</span> <span class="s1">&#39;ok&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Variogram of Co-SGS with MM1 simulation&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xe</span><span class="p">,</span><span class="n">ye</span><span class="p">,</span><span class="s1">&#39;og&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Variogram of data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">,</span><span class="n">ys</span><span class="p">,</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Variogram of Co-SGS with MM1 simulation&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Variogram Comparison&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lag (m)&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Semivariance&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/9_cokriging_and_cosimulation_MM1_28_0.png" src="_images/9_cokriging_and_cosimulation_MM1_28_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7ff388f08820&gt;
+</pre></div>
+</div>
+<img alt="_images/9_cokriging_and_cosimulation_MM1_32_1.png" src="_images/9_cokriging_and_cosimulation_MM1_32_1.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -889,13 +1012,24 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Correlation coefficient between simulated bed and surface: 0.7259809576371042
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Correlation coefficient between simulated bed and surface: 0.7260143741564793
 </pre></div>
 </div>
 </div>
 </div>
-<p>Based on our post-simulation analysis, it appears that the MM1 simulation exaggerates the correlation between the bed and the surface. This is a known issue with MM1 and is something to watch out for. This over-correlation can sometimes create simulation artifacts as well. Generally speaking, MM1 works best if the secondary data has a higher variance (i.e. is rougher) than the primary data.</p>
-<p>Download the tutorial <a class="reference download internal" download="" href="_downloads/5831090751057c533443299a1104e726/9_cokriging_and_cosimulation_MM1.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+<p>Based on our post-simulation analysis, it appears that the MM1 simulation reproduces the variogram statistics of observations, but exaggerates the correlation betweehn the bed and the surface. This is a known issue with MM1 and is something to watch out for. This over-correlation can sometimes create simulation artifacts as well. Generally speaking, MM1 works best if the secondary data has a higher variance (i.e. is rougher) than the primary data.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">VS</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[18430.230400387863, 0.5389357123737512, 0]
+</pre></div>
+</div>
+</div>
+</div>
 </section>
 </section>
 
@@ -926,13 +1060,6 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
                 
     <!-- Previous / next buttons -->
 <div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="8_interpolation_with_a_trend.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">Interpolation with a trend</p>
-        </div>
-    </a>
 </div>
             </footer>
         </div>

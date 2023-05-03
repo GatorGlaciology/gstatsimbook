@@ -17,45 +17,30 @@ Traceback (most recent call last):
     raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
 nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
 ------------------
-# set variogram parameters
-azimuth = 0
-nugget = V1.parameters[2]
-
-# the major and minor ranges are the same in this example because it is isotropic
-major_range = V1.parameters[0]
-minor_range = V1.parameters[0]
-sill = V1.parameters[1] 
-vario = [azimuth, nugget, major_range, minor_range, sill]
-
-k = 100         # number of neighboring data points used to estimate a given point 
-rad = 50000     # 50 km search radius
-
-est_cokrige, var_cokrige = gs.Interpolation.cokrige_mm1(Pred_grid_xy, df_grid, 'X', 'Y', 'Nbed', 
-                                     df_surface_grid, 'X', 'Y', 'Nsurf', k, vario, rad, corrcoef) 
+# load dependencies
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from matplotlib.pyplot import imshow
+from sklearn.preprocessing import QuantileTransformer 
+import skgstat as skg
+from skgstat import models
+import GStatSim as gs
+import earthpy as et
+import earthpy.spatial as es
+import earthpy.plot as ep
+import random
 ------------------
 
 [0;31m---------------------------------------------------------------------------[0m
-[0;31mIndexError[0m                                Traceback (most recent call last)
-[0;32m/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_18246/1711401653.py[0m in [0;36m<module>[0;34m[0m
-[1;32m     12[0m [0mrad[0m [0;34m=[0m [0;36m50000[0m     [0;31m# 50 km search radius[0m[0;34m[0m[0;34m[0m[0m
-[1;32m     13[0m [0;34m[0m[0m
-[0;32m---> 14[0;31m est_cokrige, var_cokrige = gs.Interpolation.cokrige_mm1(Pred_grid_xy, df_grid, 'X', 'Y', 'Nbed', 
-[0m[1;32m     15[0m                                      df_surface_grid, 'X', 'Y', 'Nsurf', k, vario, rad, corrcoef) 
+[0;31mModuleNotFoundError[0m                       Traceback (most recent call last)
+[0;32m/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_21622/3577745124.py[0m in [0;36m<module>[0;34m[0m
+[1;32m      7[0m [0;32mimport[0m [0mskgstat[0m [0;32mas[0m [0mskg[0m[0;34m[0m[0;34m[0m[0m
+[1;32m      8[0m [0;32mfrom[0m [0mskgstat[0m [0;32mimport[0m [0mmodels[0m[0;34m[0m[0;34m[0m[0m
+[0;32m----> 9[0;31m [0;32mimport[0m [0mGStatSim[0m [0;32mas[0m [0mgs[0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m     10[0m [0;32mimport[0m [0mearthpy[0m [0;32mas[0m [0met[0m[0;34m[0m[0;34m[0m[0m
+[1;32m     11[0m [0;32mimport[0m [0mearthpy[0m[0;34m.[0m[0mspatial[0m [0;32mas[0m [0mes[0m[0;34m[0m[0;34m[0m[0m
 
-[0;32m~/opt/anaconda3/lib/python3.9/site-packages/gstatsim.py[0m in [0;36mcokrige_mm1[0;34m(prediction_grid, df1, xx1, yy1, zz1, df2, xx2, yy2, zz2, num_points, vario, radius, corrcoef)[0m
-[1;32m   1185[0m                 [0;31m# covariance between data points[0m[0;34m[0m[0;34m[0m[0m
-[1;32m   1186[0m                 [0mcovariance_matrix[0m [0;34m=[0m [0mnp[0m[0;34m.[0m[0mzeros[0m[0;34m([0m[0mshape[0m[0;34m=[0m[0;34m([0m[0;34m([0m[0mnew_num_pts[0m [0;34m+[0m [0;36m1[0m[0;34m,[0m [0mnew_num_pts[0m [0;34m+[0m [0;36m1[0m[0;34m)[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[0;32m-> 1187[0;31m                 covariance_matrix[0:new_num_pts+1, 0:new_num_pts+1] = Covariance.make_covariance_matrix(xy_val, 
-[0m[1;32m   1188[0m                                                                                                         vario, rotation_matrix) 
-[1;32m   1189[0m [0;34m[0m[0m
-
-[0;32m~/opt/anaconda3/lib/python3.9/site-packages/gstatsim.py[0m in [0;36mmake_covariance_matrix[0;34m(coord, vario, rotation_matrix)[0m
-[1;32m    628[0m         [0mnug[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[1;32m    629[0m         [0msill[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m4[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0;32m--> 630[0;31m         [0mvtype[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m5[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
-[0m[1;32m    631[0m         [0mmat[0m [0;34m=[0m [0mnp[0m[0;34m.[0m[0mmatmul[0m[0;34m([0m[0mcoord[0m[0;34m,[0m [0mrotation_matrix[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-[1;32m    632[0m         [0meffective_lag[0m [0;34m=[0m [0mpairwise_distances[0m[0;34m([0m[0mmat[0m[0;34m,[0m[0mmat[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
-
-[0;31mIndexError[0m: list index out of range
-IndexError: list index out of range
+[0;31mModuleNotFoundError[0m: No module named 'GStatSim'
+ModuleNotFoundError: No module named 'GStatSim'
 
