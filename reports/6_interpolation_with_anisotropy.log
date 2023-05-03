@@ -1,0 +1,60 @@
+Traceback (most recent call last):
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/jupyter_cache/executors/utils.py", line 51, in single_nb_execution
+    executenb(
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 1112, in execute
+    return NotebookClient(nb=nb, resources=resources, km=km, **kwargs).execute()
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/util.py", line 74, in wrapped
+    return just_run(coro(*args, **kwargs))
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/util.py", line 53, in just_run
+    return loop.run_until_complete(coro)
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/asyncio/base_events.py", line 642, in run_until_complete
+    return future.result()
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 553, in async_execute
+    await self.async_execute_cell(
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 857, in async_execute_cell
+    self._check_raise_for_error(cell, exec_reply)
+  File "/Users/mackie3/opt/anaconda3/lib/python3.9/site-packages/nbclient/client.py", line 760, in _check_raise_for_error
+    raise CellExecutionError.from_cell_and_msg(cell, exec_reply_content)
+nbclient.exceptions.CellExecutionError: An error occurred while executing the following cell:
+------------------
+# set variogram parameters
+azimuth = 0
+nugget = V1.parameters[2]
+
+# the major and minor ranges are the same in this example because it is isotropic
+major_range = V1.parameters[0] + 15000
+minor_range = V1.parameters[0]
+sill = V1.parameters[1] 
+vario = [azimuth, nugget, major_range, minor_range, sill]
+
+k = 100                     # number of neighboring data points used to estimate a given point 
+rad = 50000                 # 50 km search radius
+
+# est_SK is the estimate and var_SK is the variance
+est_SK, var_SK = gs.Interpolation.skrige(Pred_grid_xy, df_grid, 'X', 'Y', 'Nbed', k, vario, rad) 
+------------------
+
+[0;31m---------------------------------------------------------------------------[0m
+[0;31mIndexError[0m                                Traceback (most recent call last)
+[0;32m/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_19486/3552278069.py[0m in [0;36m<module>[0;34m[0m
+[1;32m     13[0m [0;34m[0m[0m
+[1;32m     14[0m [0;31m# est_SK is the estimate and var_SK is the variance[0m[0;34m[0m[0;34m[0m[0m
+[0;32m---> 15[0;31m [0mest_SK[0m[0;34m,[0m [0mvar_SK[0m [0;34m=[0m [0mgs[0m[0;34m.[0m[0mInterpolation[0m[0;34m.[0m[0mskrige[0m[0;34m([0m[0mPred_grid_xy[0m[0;34m,[0m [0mdf_grid[0m[0;34m,[0m [0;34m'X'[0m[0;34m,[0m [0;34m'Y'[0m[0;34m,[0m [0;34m'Nbed'[0m[0;34m,[0m [0mk[0m[0;34m,[0m [0mvario[0m[0;34m,[0m [0mrad[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0m
+[0;32m~/opt/anaconda3/lib/python3.9/site-packages/gstatsim.py[0m in [0;36mskrige[0;34m(prediction_grid, df, xx, yy, zz, num_points, vario, radius)[0m
+[1;32m    735[0m [0;34m[0m[0m
+[1;32m    736[0m                 [0mcovariance_matrix[0m [0;34m=[0m [0mnp[0m[0;34m.[0m[0mzeros[0m[0;34m([0m[0mshape[0m[0;34m=[0m[0;34m([0m[0;34m([0m[0mnew_num_pts[0m[0;34m,[0m [0mnew_num_pts[0m[0;34m)[0m[0;34m)[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 737[0;31m                 covariance_matrix = Covariance.make_covariance_matrix(xy_val, 
+[0m[1;32m    738[0m                                                            vario, rotation_matrix)
+[1;32m    739[0m [0;34m[0m[0m
+
+[0;32m~/opt/anaconda3/lib/python3.9/site-packages/gstatsim.py[0m in [0;36mmake_covariance_matrix[0;34m(coord, vario, rotation_matrix)[0m
+[1;32m    628[0m         [0mnug[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m1[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[1;32m    629[0m         [0msill[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m4[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[0;32m--> 630[0;31m         [0mvtype[0m [0;34m=[0m [0mvario[0m[0;34m[[0m[0;36m5[0m[0;34m][0m[0;34m[0m[0;34m[0m[0m
+[0m[1;32m    631[0m         [0mmat[0m [0;34m=[0m [0mnp[0m[0;34m.[0m[0mmatmul[0m[0;34m([0m[0mcoord[0m[0;34m,[0m [0mrotation_matrix[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+[1;32m    632[0m         [0meffective_lag[0m [0;34m=[0m [0mpairwise_distances[0m[0;34m([0m[0mmat[0m[0;34m,[0m[0mmat[0m[0;34m)[0m[0;34m[0m[0;34m[0m[0m
+
+[0;31mIndexError[0m: list index out of range
+IndexError: list index out of range
+

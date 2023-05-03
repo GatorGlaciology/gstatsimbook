@@ -1,0 +1,1752 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Interpolation comparison using different variogram models &#8212; GStatSim</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Interpolation with anisotropy" href="6_interpolation_with_anisotropy.html" />
+    <link rel="prev" title="Sequential Gaussian simulation" href="4_Sequential_Gaussian_Simulation.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/GatorGlaciologyLogo-01.jpg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">GStatSim</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to GStatSim
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_Experimental_Variogram.html">
+   Experimental Variogram
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_Variogram_model.html">
+   Variogram Model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_Simple_kriging_and_ordinary_kriging.html">
+   Simple kriging and ordinary kriging
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="4_Sequential_Gaussian_Simulation.html">
+   Sequential Gaussian simulation
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Interpolation comparison using different variogram models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_interpolation_with_anisotropy.html">
+   Interpolation with anisotropy
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="7_non-stationary_SGS_example1.html">
+   Non-stationary SGS with k-means clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="8_non-stationary_SGS_example2.html">
+   Non-stationary SGS with adaptive partitioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="9_interpolation_with_a_trend.html">
+   Interpolation with a trend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="10_cokriging_and_cosimulation_MM1.html">
+   Co-kriging and co-SGS with Markov Model 1 (MM1)
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/GatorGlaciology/gstatsimbook/master?urlpath=tree/5_Variogram_interpolation_comparison.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/GatorGlaciology/gstatsimbook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/GatorGlaciology/gstatsimbook/issues/new?title=Issue%20on%20page%20%2F5_Variogram_interpolation_comparison.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/5_Variogram_interpolation_comparison.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fit-variogram-models">
+   Fit variogram models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initialize-grid">
+   Initialize grid
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sequential-gaussian-simulation">
+   Sequential Gaussian simulation
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Interpolation comparison using different variogram models</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#fit-variogram-models">
+   Fit variogram models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#initialize-grid">
+   Initialize grid
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#sequential-gaussian-simulation">
+   Sequential Gaussian simulation
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="interpolation-comparison-using-different-variogram-models">
+<h1>Interpolation comparison using different variogram models<a class="headerlink" href="#interpolation-comparison-using-different-variogram-models" title="Permalink to this headline">#</a></h1>
+<p>Earlier we saw that there are different types of variogram models with different shapes. In this script, we’ll use a synthetic example to explore how the variogram model affects the interpolation. For this example, we need to use GStools (<a class="reference external" href="https://github.com/GeoStat-Framework/GSTools">https://github.com/GeoStat-Framework/GSTools</a>) to generate an example data set.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">QuantileTransformer</span> 
+<span class="kn">import</span> <span class="nn">gstatsim</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="kn">import</span> <span class="nn">skgstat</span> <span class="k">as</span> <span class="nn">skg</span>
+<span class="kn">from</span> <span class="nn">skgstat</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">import</span> <span class="nn">random</span>
+<span class="kn">import</span> <span class="nn">gstools</span> <span class="k">as</span> <span class="nn">gst</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create random conditioning data using GSTools</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">100000</span><span class="p">)</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="mi">200000</span><span class="p">)</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="mi">100</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">Gaussian</span><span class="p">(</span><span class="n">dim</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">var</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">len_scale</span> <span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+<span class="n">srf</span> <span class="o">=</span> <span class="n">gst</span><span class="o">.</span><span class="n">SRF</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">300000</span><span class="p">)</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">srf</span><span class="p">((</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">))</span>
+
+<span class="c1"># plot synthetic conditioning data</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span> <span class="n">c</span> <span class="o">=</span> <span class="n">field</span><span class="p">,</span> <span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">50</span><span class="p">)</span>       <span class="c1"># scatter plot for location map</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Synthetic conditioning data&#39;</span><span class="p">)</span>                                    <span class="c1"># add plot title</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y&#39;</span><span class="p">)</span>                          <span class="c1"># set axis labels</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">orientation</span><span class="o">=</span><span class="s2">&quot;vertical&quot;</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">11</span><span class="p">))</span> <span class="c1"># add vertical color bar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(-3.465865820435638, 103.21900300391795, -4.6238074779174, 104.79195097305539)
+</pre></div>
+</div>
+<img alt="_images/5_Variogram_interpolation_comparison_2_1.png" src="_images/5_Variogram_interpolation_comparison_2_1.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make dataframe</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">transpose</span><span class="p">([</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">field</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Z&#39;</span><span class="p">])</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>X</th>
+      <th>Y</th>
+      <th>Z</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>28.756086</td>
+      <td>74.131298</td>
+      <td>-4.624638</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>50.824819</td>
+      <td>36.393990</td>
+      <td>0.233011</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>49.804102</td>
+      <td>26.813835</td>
+      <td>1.402964</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>78.166945</td>
+      <td>51.162204</td>
+      <td>-1.575844</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>12.240347</td>
+      <td>28.640275</td>
+      <td>2.443942</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># compute experimental variogram</span>
+
+<span class="n">coords</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">))</span>
+<span class="n">maxlag</span> <span class="o">=</span> <span class="mi">100</span>      <span class="c1"># maximum range distance</span>
+<span class="n">n_lags</span> <span class="o">=</span> <span class="mi">20</span>         <span class="c1"># num of bins</span>
+
+<span class="c1"># compute variogram</span>
+<span class="n">V1</span> <span class="o">=</span> <span class="n">skg</span><span class="o">.</span><span class="n">Variogram</span><span class="p">(</span><span class="n">coords</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">bin_func</span><span class="o">=</span><span class="s1">&#39;even&#39;</span><span class="p">,</span> <span class="n">n_lags</span><span class="o">=</span><span class="n">n_lags</span><span class="p">,</span> <span class="n">maxlag</span><span class="o">=</span><span class="n">maxlag</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="fit-variogram-models">
+<h2>Fit variogram models<a class="headerlink" href="#fit-variogram-models" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V1</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;gaussian&#39;</span> 
+<span class="n">V1</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[22.693182036298424, 1.6451578282438488, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V2</span> <span class="o">=</span> <span class="n">V1</span>
+<span class="n">V2</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;exponential&#39;</span> 
+<span class="n">V2</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[33.29055134096311, 1.6759340172030575, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">V3</span> <span class="o">=</span> <span class="n">V1</span>
+<span class="n">V3</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;spherical&#39;</span> 
+<span class="n">V3</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[25.747523836656736, 1.6461667327050256, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot variograms</span>
+
+<span class="c1"># extract experimental variogram values</span>
+<span class="n">xdata</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">bins</span>
+<span class="n">ydata</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">experimental</span>
+
+<span class="c1"># evaluate models</span>
+<span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xdata</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span> 
+<span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+
+<span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+
+<span class="n">y_sph</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">spherical</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+
+<span class="c1"># plot variogram model</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">y_gauss</span><span class="p">,</span><span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">y_exp</span><span class="p">,</span><span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exponential variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">y_sph</span><span class="p">,</span><span class="s1">&#39;b*-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Spherical variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span><span class="s1">&#39;og&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Experimental variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Variogram for synthetic data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lag [m]&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Semivariance&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fae0c09b220&gt;
+</pre></div>
+</div>
+<img alt="_images/5_Variogram_interpolation_comparison_9_1.png" src="_images/5_Variogram_interpolation_comparison_9_1.png" />
+</div>
+</div>
+</section>
+<section id="initialize-grid">
+<h2>Initialize grid<a class="headerlink" href="#initialize-grid" title="Permalink to this headline">#</a></h2>
+<p>Make list of grid cells that need to be simulated.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define coordinate grid</span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">xmax</span> <span class="o">=</span> <span class="mi">100</span>     <span class="c1"># min and max x values</span>
+<span class="n">ymin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="n">ymax</span> <span class="o">=</span> <span class="mi">100</span>     <span class="c1"># min and max y values</span>
+<span class="n">res</span> <span class="o">=</span> <span class="mi">1</span>
+
+<span class="n">Pred_grid_xy</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Gridding</span><span class="o">.</span><span class="n">prediction_grid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="sequential-gaussian-simulation">
+<h2>Sequential Gaussian simulation<a class="headerlink" href="#sequential-gaussian-simulation" title="Permalink to this headline">#</a></h2>
+<p>In this example we use okrige_sgs.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set variogram parameters</span>
+<span class="n">azimuth</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">nugget</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+
+<span class="c1"># save variogram parameters as a list</span>
+<span class="n">vtype</span> <span class="o">=</span> <span class="s1">&#39;Gaussian&#39;</span>
+<span class="n">vario1</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="p">]</span>
+
+<span class="n">vtype</span> <span class="o">=</span> <span class="s1">&#39;Exponential&#39;</span>
+<span class="n">vario2</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="p">]</span>
+
+<span class="n">vtype</span> <span class="o">=</span> <span class="s1">&#39;Spherical&#39;</span>
+<span class="n">vario3</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">vtype</span><span class="p">]</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">48</span>      <span class="c1"># number of neighboring data points used to estimate a given point </span>
+<span class="n">rad</span> <span class="o">=</span> <span class="mi">50</span>    <span class="c1"># search radius</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulation</span>
+
+<span class="n">sim_gauss</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario1</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="n">sim_exp</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario2</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="n">sim_sph</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario3</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|                                                 | 0/10201 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|                                       | 16/10201 [00:00&lt;01:05, 155.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|▏                                      | 33/10201 [00:00&lt;01:02, 163.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|▏                                      | 51/10201 [00:00&lt;01:00, 168.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|▎                                      | 69/10201 [00:00&lt;00:59, 169.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|▎                                      | 87/10201 [00:00&lt;00:59, 170.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|▍                                     | 105/10201 [00:00&lt;00:59, 170.92it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|▍                                     | 123/10201 [00:00&lt;00:59, 170.79it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|▌                                     | 141/10201 [00:00&lt;00:58, 171.28it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▌                                     | 159/10201 [00:00&lt;00:58, 171.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▋                                     | 177/10201 [00:01&lt;00:59, 169.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▋                                     | 194/10201 [00:01&lt;00:59, 169.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▊                                     | 212/10201 [00:01&lt;00:58, 169.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▊                                     | 229/10201 [00:01&lt;00:58, 169.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  2%|▉                                     | 247/10201 [00:01&lt;00:58, 169.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▉                                     | 265/10201 [00:01&lt;00:58, 169.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|█                                     | 282/10201 [00:01&lt;00:58, 169.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|█                                     | 300/10201 [00:01&lt;00:58, 170.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|█▏                                    | 318/10201 [00:01&lt;00:58, 169.62it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|█▎                                    | 336/10201 [00:01&lt;00:57, 170.82it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|█▎                                    | 354/10201 [00:02&lt;00:57, 170.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4%|█▍                                    | 372/10201 [00:02&lt;00:57, 171.86it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4%|█▍                                    | 390/10201 [00:02&lt;00:57, 171.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4%|█▌                                    | 408/10201 [00:02&lt;00:57, 171.42it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4%|█▌                                    | 426/10201 [00:02&lt;00:57, 170.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  4%|█▋                                    | 444/10201 [00:02&lt;00:57, 170.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|█▋                                    | 462/10201 [00:02&lt;00:57, 169.99it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|█▊                                    | 480/10201 [00:02&lt;00:57, 170.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|█▊                                    | 498/10201 [00:02&lt;00:57, 169.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|█▉                                    | 515/10201 [00:03&lt;00:57, 169.25it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|█▉                                    | 533/10201 [00:03&lt;00:56, 169.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|██                                    | 551/10201 [00:03&lt;00:56, 170.72it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██                                    | 569/10201 [00:03&lt;00:56, 171.03it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██▏                                   | 587/10201 [00:03&lt;00:56, 169.59it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██▎                                   | 605/10201 [00:03&lt;00:56, 169.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██▎                                   | 622/10201 [00:03&lt;00:56, 169.12it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██▍                                   | 640/10201 [00:03&lt;00:56, 169.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  6%|██▍                                   | 657/10201 [00:03&lt;00:56, 168.62it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▌                                   | 674/10201 [00:03&lt;00:56, 168.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▌                                   | 692/10201 [00:04&lt;00:55, 169.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▋                                   | 709/10201 [00:04&lt;00:55, 169.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▋                                   | 727/10201 [00:04&lt;00:55, 170.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▊                                   | 745/10201 [00:04&lt;00:55, 169.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  7%|██▊                                   | 762/10201 [00:04&lt;00:55, 168.91it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|██▉                                   | 779/10201 [00:04&lt;00:55, 168.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|██▉                                   | 796/10201 [00:04&lt;00:55, 168.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|███                                   | 813/10201 [00:04&lt;00:55, 169.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|███                                   | 830/10201 [00:04&lt;00:55, 168.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|███▏                                  | 847/10201 [00:04&lt;00:55, 168.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|███▏                                  | 864/10201 [00:05&lt;00:55, 166.76it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▎                                  | 881/10201 [00:05&lt;00:56, 165.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▎                                  | 898/10201 [00:05&lt;00:56, 166.06it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▍                                  | 916/10201 [00:05&lt;00:55, 167.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▍                                  | 933/10201 [00:05&lt;00:55, 168.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▌                                  | 950/10201 [00:05&lt;00:55, 167.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  9%|███▌                                  | 967/10201 [00:05&lt;00:55, 166.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▋                                  | 985/10201 [00:05&lt;00:54, 167.72it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▋                                 | 1002/10201 [00:05&lt;00:54, 168.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▋                                 | 1020/10201 [00:06&lt;00:54, 168.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▊                                 | 1037/10201 [00:06&lt;00:54, 168.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▊                                 | 1054/10201 [00:06&lt;00:54, 166.96it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|███▉                                 | 1071/10201 [00:06&lt;00:54, 167.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|███▉                                 | 1089/10201 [00:06&lt;00:54, 168.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|████                                 | 1107/10201 [00:06&lt;00:53, 168.86it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|████                                 | 1125/10201 [00:06&lt;00:53, 169.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|████▏                                | 1142/10201 [00:06&lt;00:53, 168.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 11%|████▏                                | 1160/10201 [00:06&lt;00:53, 169.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▎                                | 1177/10201 [00:06&lt;00:53, 169.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▎                                | 1194/10201 [00:07&lt;00:53, 169.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▍                                | 1211/10201 [00:07&lt;00:53, 168.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▍                                | 1228/10201 [00:07&lt;00:53, 168.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▌                                | 1245/10201 [00:07&lt;00:53, 168.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|████▌                                | 1262/10201 [00:07&lt;00:53, 168.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▋                                | 1279/10201 [00:07&lt;00:52, 168.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▋                                | 1296/10201 [00:07&lt;00:52, 168.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▊                                | 1313/10201 [00:07&lt;00:52, 168.06it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▊                                | 1330/10201 [00:07&lt;00:52, 167.75it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▉                                | 1347/10201 [00:07&lt;00:52, 167.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 13%|████▉                                | 1364/10201 [00:08&lt;00:52, 167.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████                                | 1381/10201 [00:08&lt;00:53, 165.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████                                | 1398/10201 [00:08&lt;00:53, 165.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████▏                               | 1415/10201 [00:08&lt;00:53, 164.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████▏                               | 1432/10201 [00:08&lt;00:53, 163.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████▎                               | 1449/10201 [00:08&lt;00:53, 164.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█████▎                               | 1466/10201 [00:08&lt;00:52, 166.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▍                               | 1483/10201 [00:08&lt;00:52, 166.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▍                               | 1500/10201 [00:08&lt;00:52, 166.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▌                               | 1517/10201 [00:08&lt;00:52, 166.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▌                               | 1534/10201 [00:09&lt;00:51, 166.83it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▋                               | 1551/10201 [00:09&lt;00:51, 166.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█████▋                               | 1568/10201 [00:09&lt;00:52, 165.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█████▋                               | 1585/10201 [00:09&lt;00:52, 165.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█████▊                               | 1602/10201 [00:09&lt;00:51, 166.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█████▊                               | 1619/10201 [00:09&lt;00:51, 166.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█████▉                               | 1636/10201 [00:09&lt;00:51, 166.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█████▉                               | 1653/10201 [00:09&lt;00:51, 166.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|██████                               | 1670/10201 [00:09&lt;00:51, 165.83it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████                               | 1687/10201 [00:10&lt;00:51, 165.61it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████▏                              | 1704/10201 [00:10&lt;00:51, 165.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████▏                              | 1721/10201 [00:10&lt;00:51, 165.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████▎                              | 1738/10201 [00:10&lt;00:51, 165.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████▎                              | 1755/10201 [00:10&lt;00:50, 165.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|██████▍                              | 1772/10201 [00:10&lt;00:50, 165.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▍                              | 1789/10201 [00:10&lt;00:50, 166.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▌                              | 1806/10201 [00:10&lt;00:50, 165.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▌                              | 1823/10201 [00:10&lt;00:50, 164.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▋                              | 1840/10201 [00:10&lt;00:50, 165.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▋                              | 1857/10201 [00:11&lt;00:50, 165.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|██████▊                              | 1874/10201 [00:11&lt;00:50, 165.25it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|██████▊                              | 1891/10201 [00:11&lt;00:50, 165.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|██████▉                              | 1908/10201 [00:11&lt;00:50, 164.93it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|██████▉                              | 1925/10201 [00:11&lt;00:50, 165.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|███████                              | 1942/10201 [00:11&lt;00:50, 165.09it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|███████                              | 1959/10201 [00:11&lt;00:49, 164.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|███████▏                             | 1976/10201 [00:11&lt;00:49, 165.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▏                             | 1993/10201 [00:11&lt;00:49, 165.79it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▎                             | 2010/10201 [00:11&lt;00:49, 165.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▎                             | 2027/10201 [00:12&lt;00:49, 165.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▍                             | 2044/10201 [00:12&lt;00:49, 165.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▍                             | 2061/10201 [00:12&lt;00:48, 166.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|███████▌                             | 2078/10201 [00:12&lt;00:48, 166.29it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▌                             | 2095/10201 [00:12&lt;00:48, 166.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▋                             | 2112/10201 [00:12&lt;00:48, 165.66it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▋                             | 2129/10201 [00:12&lt;00:48, 165.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▊                             | 2146/10201 [00:12&lt;00:48, 165.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▊                             | 2163/10201 [00:12&lt;00:48, 165.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 21%|███████▉                             | 2180/10201 [00:13&lt;00:48, 165.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|███████▉                             | 2197/10201 [00:13&lt;00:48, 165.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████                             | 2214/10201 [00:13&lt;00:48, 164.94it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████                             | 2231/10201 [00:13&lt;00:48, 164.56it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████▏                            | 2248/10201 [00:13&lt;00:48, 164.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████▏                            | 2265/10201 [00:13&lt;00:48, 163.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|████████▎                            | 2282/10201 [00:13&lt;00:48, 163.69it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▎                            | 2299/10201 [00:13&lt;00:48, 164.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▍                            | 2316/10201 [00:13&lt;00:47, 164.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▍                            | 2333/10201 [00:13&lt;00:47, 164.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▌                            | 2350/10201 [00:14&lt;00:47, 164.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▌                            | 2367/10201 [00:14&lt;00:47, 164.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 23%|████████▋                            | 2384/10201 [00:14&lt;00:47, 164.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|████████▋                            | 2401/10201 [00:14&lt;00:47, 164.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|████████▊                            | 2418/10201 [00:14&lt;00:47, 164.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|████████▊                            | 2435/10201 [00:14&lt;00:47, 164.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|████████▉                            | 2452/10201 [00:14&lt;00:46, 164.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|████████▉                            | 2469/10201 [00:14&lt;00:46, 164.71it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|█████████                            | 2486/10201 [00:14&lt;00:46, 164.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████                            | 2503/10201 [00:14&lt;00:46, 165.05it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████▏                           | 2520/10201 [00:15&lt;00:46, 165.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████▏                           | 2537/10201 [00:15&lt;00:46, 165.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████▎                           | 2554/10201 [00:15&lt;00:46, 164.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████▎                           | 2571/10201 [00:15&lt;00:46, 164.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|█████████▍                           | 2588/10201 [00:15&lt;00:46, 164.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▍                           | 2605/10201 [00:15&lt;00:46, 164.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▌                           | 2622/10201 [00:15&lt;00:46, 164.06it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▌                           | 2639/10201 [00:15&lt;00:46, 164.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▋                           | 2656/10201 [00:15&lt;00:45, 164.64it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▋                           | 2673/10201 [00:15&lt;00:45, 164.46it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|█████████▊                           | 2690/10201 [00:16&lt;00:45, 164.57it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|█████████▊                           | 2707/10201 [00:16&lt;00:45, 164.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|█████████▉                           | 2724/10201 [00:16&lt;00:45, 164.41it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|█████████▉                           | 2741/10201 [00:16&lt;00:45, 164.22it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██████████                           | 2758/10201 [00:16&lt;00:45, 164.24it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██████████                           | 2775/10201 [00:16&lt;00:45, 164.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██████████▏                          | 2792/10201 [00:16&lt;00:45, 163.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▏                          | 2809/10201 [00:16&lt;00:45, 163.49it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▎                          | 2826/10201 [00:16&lt;00:45, 163.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▎                          | 2843/10201 [00:17&lt;00:45, 163.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▎                          | 2860/10201 [00:17&lt;00:45, 162.99it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▍                          | 2877/10201 [00:17&lt;00:44, 162.78it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██████████▍                          | 2894/10201 [00:17&lt;00:44, 163.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▌                          | 2911/10201 [00:17&lt;00:44, 162.68it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▌                          | 2928/10201 [00:17&lt;00:44, 162.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▋                          | 2945/10201 [00:17&lt;00:44, 163.10it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▋                          | 2962/10201 [00:17&lt;00:44, 163.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▊                          | 2979/10201 [00:17&lt;00:44, 163.22it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██████████▊                          | 2996/10201 [00:17&lt;00:44, 163.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|██████████▉                          | 3013/10201 [00:18&lt;00:44, 163.17it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|██████████▉                          | 3030/10201 [00:18&lt;00:43, 163.23it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███████████                          | 3047/10201 [00:18&lt;00:43, 163.07it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███████████                          | 3064/10201 [00:18&lt;00:43, 162.74it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███████████▏                         | 3081/10201 [00:18&lt;00:43, 163.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███████████▏                         | 3098/10201 [00:18&lt;00:43, 163.06it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▎                         | 3115/10201 [00:18&lt;00:43, 162.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▎                         | 3132/10201 [00:18&lt;00:43, 162.48it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▍                         | 3149/10201 [00:18&lt;00:43, 162.19it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▍                         | 3166/10201 [00:19&lt;00:43, 162.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▌                         | 3183/10201 [00:19&lt;00:43, 162.26it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███████████▌                         | 3200/10201 [00:19&lt;00:43, 162.25it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▋                         | 3217/10201 [00:19&lt;00:43, 162.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▋                         | 3234/10201 [00:19&lt;00:42, 162.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▊                         | 3251/10201 [00:19&lt;00:42, 162.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▊                         | 3268/10201 [00:19&lt;00:42, 162.52it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▉                         | 3285/10201 [00:19&lt;00:42, 163.18it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███████████▉                         | 3302/10201 [00:19&lt;00:42, 162.58it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████                         | 3319/10201 [00:19&lt;00:42, 162.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████                         | 3336/10201 [00:20&lt;00:42, 162.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████▏                        | 3353/10201 [00:20&lt;00:42, 162.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████▏                        | 3370/10201 [00:20&lt;00:42, 162.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████▎                        | 3387/10201 [00:20&lt;00:42, 161.66it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|████████████▎                        | 3404/10201 [00:20&lt;00:42, 161.53it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▍                        | 3421/10201 [00:20&lt;00:42, 161.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▍                        | 3438/10201 [00:20&lt;00:42, 160.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▌                        | 3455/10201 [00:20&lt;00:41, 160.90it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▌                        | 3472/10201 [00:20&lt;00:41, 161.27it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▋                        | 3489/10201 [00:21&lt;00:41, 161.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|████████████▋                        | 3506/10201 [00:21&lt;00:41, 161.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|████████████▊                        | 3523/10201 [00:21&lt;00:41, 161.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|████████████▊                        | 3540/10201 [00:21&lt;00:41, 160.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|████████████▉                        | 3557/10201 [00:21&lt;00:41, 160.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|████████████▉                        | 3574/10201 [00:21&lt;00:41, 160.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|█████████████                        | 3591/10201 [00:21&lt;00:40, 161.51it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|█████████████                        | 3608/10201 [00:21&lt;00:40, 161.64it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▏                       | 3625/10201 [00:21&lt;00:40, 161.51it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▏                       | 3642/10201 [00:21&lt;00:40, 161.65it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▎                       | 3659/10201 [00:22&lt;00:40, 161.13it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▎                       | 3676/10201 [00:22&lt;00:40, 161.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▍                       | 3693/10201 [00:22&lt;00:40, 161.38it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|█████████████▍                       | 3710/10201 [00:22&lt;00:40, 161.95it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▌                       | 3727/10201 [00:22&lt;00:39, 161.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▌                       | 3744/10201 [00:22&lt;00:39, 161.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▋                       | 3761/10201 [00:22&lt;00:39, 162.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▋                       | 3778/10201 [00:22&lt;00:39, 161.81it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▊                       | 3795/10201 [00:22&lt;00:39, 161.94it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|█████████████▊                       | 3812/10201 [00:23&lt;00:39, 161.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|█████████████▉                       | 3829/10201 [00:23&lt;00:39, 161.31it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|█████████████▉                       | 3846/10201 [00:23&lt;00:39, 160.98it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|██████████████                       | 3863/10201 [00:23&lt;00:39, 160.77it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|██████████████                       | 3880/10201 [00:23&lt;00:39, 160.39it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|██████████████▏                      | 3897/10201 [00:23&lt;00:39, 160.50it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|██████████████▏                      | 3914/10201 [00:23&lt;00:39, 159.65it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▎                      | 3930/10201 [00:23&lt;00:39, 159.70it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▎                      | 3947/10201 [00:23&lt;00:39, 160.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▍                      | 3964/10201 [00:23&lt;00:38, 160.08it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▍                      | 3981/10201 [00:24&lt;00:38, 160.21it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▌                      | 3998/10201 [00:24&lt;00:38, 161.02it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|██████████████▌                      | 4015/10201 [00:24&lt;00:38, 160.56it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▌                      | 4032/10201 [00:24&lt;00:38, 160.32it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▋                      | 4049/10201 [00:24&lt;00:38, 160.03it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▋                      | 4066/10201 [00:24&lt;00:38, 160.28it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▊                      | 4083/10201 [00:24&lt;00:38, 159.85it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▊                      | 4099/10201 [00:24&lt;00:38, 159.64it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|██████████████▉                      | 4116/10201 [00:24&lt;00:37, 160.44it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|██████████████▉                      | 4133/10201 [00:25&lt;00:37, 160.76it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|███████████████                      | 4150/10201 [00:25&lt;00:37, 160.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|███████████████                      | 4167/10201 [00:25&lt;00:37, 160.33it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|███████████████▏                     | 4184/10201 [00:25&lt;00:37, 160.47it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|███████████████▏                     | 4201/10201 [00:25&lt;00:37, 160.36it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|███████████████▎                     | 4218/10201 [00:25&lt;00:37, 160.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▎                     | 4235/10201 [00:25&lt;00:37, 159.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▍                     | 4252/10201 [00:25&lt;00:37, 159.92it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▍                     | 4268/10201 [00:25&lt;00:37, 159.60it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▌                     | 4284/10201 [00:25&lt;00:37, 159.51it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▌                     | 4301/10201 [00:26&lt;00:36, 160.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▋                     | 4318/10201 [00:26&lt;00:36, 159.86it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|███████████████▋                     | 4335/10201 [00:26&lt;00:36, 160.24it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|███████████████▊                     | 4352/10201 [00:26&lt;00:36, 160.12it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|███████████████▊                     | 4369/10201 [00:26&lt;00:36, 159.73it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|███████████████▉                     | 4385/10201 [00:26&lt;00:36, 159.45it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|███████████████▉                     | 4402/10201 [00:26&lt;00:36, 159.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████████████████                     | 4419/10201 [00:26&lt;00:36, 159.87it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████████████████                     | 4435/10201 [00:26&lt;00:36, 159.24it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▏                    | 4451/10201 [00:27&lt;00:36, 159.00it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▏                    | 4467/10201 [00:27&lt;00:36, 158.95it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▎                    | 4483/10201 [00:27&lt;00:35, 158.89it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▎                    | 4499/10201 [00:27&lt;00:35, 158.55it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▍                    | 4515/10201 [00:27&lt;00:35, 158.80it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████████████████▍                    | 4531/10201 [00:27&lt;00:35, 158.40it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▍                    | 4547/10201 [00:27&lt;00:35, 158.37it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▌                    | 4563/10201 [00:27&lt;00:35, 158.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▌                    | 4580/10201 [00:27&lt;00:35, 159.30it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▋                    | 4596/10201 [00:27&lt;00:35, 159.14it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▋                    | 4613/10201 [00:28&lt;00:34, 159.69it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████████████████▊                    | 4629/10201 [00:28&lt;00:35, 159.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████████████████▊                    | 4645/10201 [00:28&lt;00:34, 159.16it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████████████████▉                    | 4661/10201 [00:28&lt;00:34, 158.88it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████████████████▉                    | 4677/10201 [00:28&lt;00:34, 159.15it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|█████████████████                    | 4693/10201 [00:28&lt;00:34, 158.56it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|█████████████████                    | 4710/10201 [00:28&lt;00:34, 158.96it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|█████████████████▏                   | 4726/10201 [00:28&lt;00:34, 158.97it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|█████████████████▏                   | 4742/10201 [00:28&lt;00:34, 158.59it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▎                   | 4758/10201 [00:28&lt;00:34, 158.34it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▎                   | 4775/10201 [00:29&lt;00:34, 158.95it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▍                   | 4792/10201 [00:29&lt;00:33, 159.35it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▍                   | 4808/10201 [00:29&lt;00:33, 158.75it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▍                   | 4824/10201 [00:29&lt;00:33, 158.43it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|█████████████████▌                   | 4840/10201 [00:29&lt;00:33, 158.63it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▌                   | 4857/10201 [00:29&lt;00:33, 159.12it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▋                   | 4873/10201 [00:29&lt;00:33, 159.11it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▋                   | 4889/10201 [00:29&lt;00:33, 159.01it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▊                   | 4905/10201 [00:29&lt;00:33, 158.67it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▊                   | 4921/10201 [00:29&lt;00:33, 158.84it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|█████████████████▊                   | 4921/10201 [00:29&lt;00:32, 164.20it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">3</span><span class="n">d</span><span class="o">/</span><span class="n">s79lt6q910z0whw_7c_z48lc0000gp</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_19475</span><span class="o">/</span><span class="mf">465663678.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">1</span> <span class="c1"># simulation</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span> 
+<span class="ne">----&gt; </span><span class="mi">3</span> <span class="n">sim_gauss</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario1</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span> 
+<span class="g g-Whitespace">      </span><span class="mi">5</span> <span class="n">sim_exp</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario2</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/gstatsim.py</span> in <span class="ni">okrige_sgs</span><span class="nt">(prediction_grid, df, xx, yy, zz, num_points, vario, radius)</span>
+<span class="g g-Whitespace">    </span><span class="mi">973</span>             <span class="n">z</span> <span class="o">=</span> <span class="n">xyindex</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+<span class="g g-Whitespace">    </span><span class="mi">974</span>             <span class="n">test_idx</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">prediction_grid</span><span class="p">[</span><span class="n">z</span><span class="p">]</span><span class="o">==</span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span><span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+<span class="ne">--&gt; </span><span class="mi">975</span>             <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">test_idx</span><span class="o">==</span><span class="mi">2</span><span class="p">)</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+<span class="g g-Whitespace">    </span><span class="mi">976</span> 
+<span class="g g-Whitespace">    </span><span class="mi">977</span>                 <span class="c1"># gather nearest neighbor points</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">vmax</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">vmax</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">131</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sim_gauss</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gaussian SGS&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">132</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sim_exp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Exponential SGS&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">133</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">sim_sph</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span> 
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Spherical SGS&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Here we can see that SGS with different variogram models has different spatial characteristics. For example, the Gaussian SGS realization is very smooth because the Gaussian variogram model is nearly zero at small lags.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># kriging</span>
+<span class="n">krige_gauss</span><span class="p">,</span> <span class="n">var_gauss</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario1</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="n">krige_exp</span><span class="p">,</span> <span class="n">var_exp</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario2</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="n">krige_sph</span><span class="p">,</span> <span class="n">var_sph</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">okrige</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Z&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">vario3</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># kriging plots</span>
+<span class="n">vmax</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="n">vmin</span> <span class="o">=</span> <span class="o">-</span><span class="n">vmax</span>
+
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">231</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">krige_gauss</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gaussian Kriging&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">232</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">krige_exp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Exponential Kriging&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">233</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">krige_sph</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="n">vmin</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="n">vmax</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Spherical Kriging&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">234</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_gauss</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">)),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Gaussian kriging standard deviation&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">235</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_exp</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">)),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Exponential kriging standard deviation&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">subplot</span><span class="p">(</span><span class="mi">236</span><span class="p">)</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">var_sph</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">101</span><span class="p">,</span><span class="mi">101</span><span class="p">)),</span> <span class="n">vmin</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">vmax</span> <span class="o">=</span> <span class="mf">1.5</span><span class="p">,</span> <span class="n">cmap</span> <span class="o">=</span> <span class="s1">&#39;magma&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mf">2.5</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.75</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Spherical kriging standard deviation&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The different kriging results are fairly similar, but the uncertainties are much lower for the Gaussian model and greater for the Exponential model. So using the wrong variogram model type could cause you to overestimate or underestimate the uncertainty.</p>
+<p>To choose the right variogram model, you can compare the different variogram models to the experimental variogram to see which one fits best. In some cases, the best choice might be unclear. It is also important to consider the geological phenomena you are modeling and the type of spatial structure it has. For example, if you are modeling a geological condition that you know is smoothly varying, then you would most likely want to use a Gaussian variogram.</p>
+<p>Download the tutorial <a class="reference download internal" download="" href="_downloads/c6c8755bbf15c832d098dc35bc587296/5_Variogram_interpolation_comparison.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="4_Sequential_Gaussian_Simulation.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Sequential Gaussian simulation</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="6_interpolation_with_anisotropy.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Interpolation with anisotropy</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Emma MacKie, Michael Field, Lijing Wang, Nathan Schoedl, and Matthew Hibbs<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

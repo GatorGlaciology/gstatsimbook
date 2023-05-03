@@ -47,7 +47,7 @@ git clone https://github.com/GatorGlaciology/GStatSim
 * Matplotlib
 * SciKit-GStat
 
-These can all be installed using `pip`. We have included a plot_utils.py file with plotting routines for the tutorials.
+These can all be installed using `pip`. 
 
 
 

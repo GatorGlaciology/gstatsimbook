@@ -142,27 +142,32 @@ const thebe_selector_output = ".output, .cell_output"
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="5_interpolation_with_anisotropy.html">
+  <a class="reference internal" href="5_Variogram_interpolation_comparison.html">
+   Interpolation comparison using different variogram models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_interpolation_with_anisotropy.html">
    Interpolation with anisotropy
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="6_non-stationary_SGS_example1.html">
+  <a class="reference internal" href="7_non-stationary_SGS_example1.html">
    Non-stationary SGS with k-means clustering
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="7_non-stationary_SGS_example2.html">
+  <a class="reference internal" href="8_non-stationary_SGS_example2.html">
    Non-stationary SGS with adaptive partitioning
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="8_interpolation_with_a_trend.html">
+  <a class="reference internal" href="9_interpolation_with_a_trend.html">
    Interpolation with a trend
   </a>
  </li>
  <li class="toctree-l1">
-  <a class="reference internal" href="9_cokriging_and_cosimulation_MM1.html">
+  <a class="reference internal" href="10_cokriging_and_cosimulation_MM1.html">
    Co-kriging and co-SGS with Markov Model 1 (MM1)
   </a>
  </li>
@@ -614,13 +619,13 @@ title="Print to PDF"
 <div class="cell_output docutils container">
 <div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
 <span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
-<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">3</span><span class="n">d</span><span class="o">/</span><span class="n">s79lt6q910z0whw_7c_z48lc0000gp</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_18443</span><span class="o">/</span><span class="mf">160046587.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">3</span><span class="n">d</span><span class="o">/</span><span class="n">s79lt6q910z0whw_7c_z48lc0000gp</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_19404</span><span class="o">/</span><span class="mf">160046587.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> 
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
 <span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
 <span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">y_sph</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">spherical</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
 
-<span class="nn">/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_18443/160046587.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
+<span class="nn">/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_19404/160046587.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
 <span class="g g-Whitespace">      </span><span class="mi">3</span> 
 <span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
 <span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
@@ -661,6 +666,8 @@ title="Print to PDF"
 <span class="g g-Whitespace">   </span><span class="mi">1357</span> 
 <span class="g g-Whitespace">   </span><span class="mi">1358</span>     <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
 
+<span class="nn">&lt;__array_function__ internals&gt;</span> in <span class="ni">where</span><span class="nt">(*args, **kwargs)</span>
+
 <span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
@@ -680,6 +687,12 @@ title="Print to PDF"
 <span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7f86767d5fa0&gt;
+</pre></div>
+</div>
+<img alt="_images/2_Variogram_model_13_1.png" src="_images/2_Variogram_model_13_1.png" />
 </div>
 </div>
 <p>By looking at the variogram models, we can see that the exponential model fits the best. As such, we will use the exponential variogram model type to perform interpolations.</p>

@@ -1,0 +1,834 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Non-stationary SGS with k-means clustering &#8212; GStatSim</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="_static/sphinx-thebe.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Non-stationary SGS with adaptive partitioning" href="8_non-stationary_SGS_example2.html" />
+    <link rel="prev" title="Interpolation with anisotropy" href="6_interpolation_with_anisotropy.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/GatorGlaciologyLogo-01.jpg" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">GStatSim</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="intro.html">
+                    Welcome to GStatSim
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="installation.html">
+   Installation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="1_Experimental_Variogram.html">
+   Experimental Variogram
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="2_Variogram_model.html">
+   Variogram Model
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="3_Simple_kriging_and_ordinary_kriging.html">
+   Simple kriging and ordinary kriging
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="4_Sequential_Gaussian_Simulation.html">
+   Sequential Gaussian simulation
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="5_Variogram_interpolation_comparison.html">
+   Interpolation comparison using different variogram models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="6_interpolation_with_anisotropy.html">
+   Interpolation with anisotropy
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Non-stationary SGS with k-means clustering
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="8_non-stationary_SGS_example2.html">
+   Non-stationary SGS with adaptive partitioning
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="9_interpolation_with_a_trend.html">
+   Interpolation with a trend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="10_cokriging_and_cosimulation_MM1.html">
+   Co-kriging and co-SGS with Markov Model 1 (MM1)
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/GatorGlaciology/gstatsimbook/master?urlpath=tree/7_non-stationary_SGS_example1.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+<div class="menu-dropdown menu-dropdown-repository-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Source repositories">
+      <i class="fab fa-github"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://github.com/GatorGlaciology/gstatsimbook"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="headerbtn__text-container">repository</span>
+</a>
+
+      </li>
+      
+      <li>
+        <a href="https://github.com/GatorGlaciology/gstatsimbook/issues/new?title=Issue%20on%20page%20%2F7_non-stationary_SGS_example1.html&body=Your%20issue%20content%20here."
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Open an issue"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="headerbtn__text-container">open issue</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="_sources/7_non-stationary_SGS_example1.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-plot-data">
+   Load and plot data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grid-and-transform-data">
+   Grid and transform data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#group-data-into-different-clusters-using-k-means-clustering">
+   Group data into different clusters using K-means clustering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-with-sgs">
+   Simulate with SGS
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Non-stationary SGS with k-means clustering</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#load-and-plot-data">
+   Load and plot data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#grid-and-transform-data">
+   Grid and transform data
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#group-data-into-different-clusters-using-k-means-clustering">
+   Group data into different clusters using K-means clustering
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-with-sgs">
+   Simulate with SGS
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="non-stationary-sgs-with-k-means-clustering">
+<h1>Non-stationary SGS with k-means clustering<a class="headerlink" href="#non-stationary-sgs-with-k-means-clustering" title="Permalink to this headline">#</a></h1>
+<p>Often you may encounter an environment where the spatial statistics are not uniform throughout a region. This is known as non-stationarity. For example, topography can be rough in some places but smooth in others. Here, we demonstrate how to implement SGS with multiple variograms assigned to different regions. We use k-means clustering to divide the data into clusters, and model a separate variogram for each cluster.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># load dependencies</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">mpl_toolkits.axes_grid1</span> <span class="kn">import</span> <span class="n">make_axes_locatable</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">QuantileTransformer</span> 
+<span class="kn">import</span> <span class="nn">skgstat</span> <span class="k">as</span> <span class="nn">skg</span>
+<span class="kn">from</span> <span class="nn">skgstat</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">import</span> <span class="nn">gstatsim</span> <span class="k">as</span> <span class="nn">gs</span>
+<span class="kn">from</span> <span class="nn">sklearn.cluster</span> <span class="kn">import</span> <span class="n">KMeans</span>
+
+<span class="c1"># plotting utility functions</span>
+<span class="kn">from</span> <span class="nn">plot_utils</span> <span class="kn">import</span> <span class="n">splot2D</span><span class="p">,</span> <span class="n">mplot1</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="load-and-plot-data">
+<h2>Load and plot data<a class="headerlink" href="#load-and-plot-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_bed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s1">&#39;data/greenland_test_data.csv&#39;</span><span class="p">)</span>
+
+<span class="c1"># remove erroneously high values due to bad bed picks</span>
+<span class="n">df_bed</span> <span class="o">=</span> <span class="n">df_bed</span><span class="p">[</span><span class="n">df_bed</span><span class="p">[</span><span class="s2">&quot;Bed&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">700</span><span class="p">]</span>  
+
+<span class="c1"># plot original data</span>
+<span class="n">splot2D</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df_bed</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original bed data&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_3_0.png" src="_images/7_non-stationary_SGS_example1_3_0.png" />
+</div>
+</div>
+</section>
+<section id="grid-and-transform-data">
+<h2>Grid and transform data<a class="headerlink" href="#grid-and-transform-data" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># grid data to 100 m resolution and remove coordinates with NaNs</span>
+<span class="n">res</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">df_grid</span><span class="p">,</span> <span class="n">grid_matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Gridding</span><span class="o">.</span><span class="n">grid_data</span><span class="p">(</span><span class="n">df_bed</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Bed&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+<span class="n">df_grid</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="n">df_grid</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
+<span class="n">df_grid</span> <span class="o">=</span> <span class="n">df_grid</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;Z&quot;</span><span class="p">:</span> <span class="s2">&quot;Bed&quot;</span><span class="p">})</span>
+
+<span class="c1"># normal score transformation</span>
+<span class="n">data</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Bed&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">nst_trans</span> <span class="o">=</span> <span class="n">QuantileTransformer</span><span class="p">(</span><span class="n">n_quantiles</span><span class="o">=</span><span class="mi">500</span><span class="p">,</span> <span class="n">output_distribution</span><span class="o">=</span><span class="s2">&quot;normal&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+<span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">nst_trans</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">data</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="group-data-into-different-clusters-using-k-means-clustering">
+<h2>Group data into different clusters using K-means clustering<a class="headerlink" href="#group-data-into-different-clusters-using-k-means-clustering" title="Permalink to this headline">#</a></h2>
+<p>We will break the data into different groups so that each group can be assigned a different variogram. There are many ways the data could be divided. Here we will use k-means clustering with three clusters. The clustering will be based on the coordinates and bed elevation values of the data. The intuition is that data points in similar locations with similar elevation ranges are more likely to have similar variogram parameters.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># K means clustering</span>
+<span class="n">n_clusters</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="n">kmeans</span> <span class="o">=</span> <span class="n">KMeans</span><span class="p">(</span><span class="n">n_clusters</span> <span class="o">=</span> <span class="n">n_clusters</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">,</span><span class="s1">&#39;Nbed&#39;</span><span class="p">]])</span>
+<span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">kmeans</span><span class="o">.</span><span class="n">labels_</span>  <span class="c1"># make column in dataframe with cluster name</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cmap</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">get_cmap</span><span class="p">(</span><span class="s1">&#39;plasma&#39;</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">],</span> <span class="n">marker</span><span class="o">=</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">s</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="n">cmap</span><span class="p">)</span>
+<span class="n">im</span><span class="o">.</span><span class="n">set_clim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">-</span><span class="mf">0.5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Clusters&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X (m)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y (m)&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># make colorbar</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_ticks</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">n_clusters</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_clusters</span><span class="p">))</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_ticklabels</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">n_clusters</span><span class="p">))</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s1">&#39;Cluster&#39;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_8_0.png" src="_images/7_non-stationary_SGS_example1_8_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># experimental variogram parameters</span>
+<span class="n">maxlag</span> <span class="o">=</span> <span class="mi">50000</span>
+<span class="n">n_lags</span> <span class="o">=</span> <span class="mi">70</span> <span class="c1">#num of bins</span>
+
+<span class="c1"># cluster 0 variogram</span>
+<span class="n">df0</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">coords0</span> <span class="o">=</span> <span class="n">df0</span><span class="p">[[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">values0</span> <span class="o">=</span> <span class="n">df0</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">]</span>
+<span class="n">V0</span> <span class="o">=</span> <span class="n">skg</span><span class="o">.</span><span class="n">Variogram</span><span class="p">(</span><span class="n">coords0</span><span class="p">,</span> <span class="n">values0</span><span class="p">,</span> <span class="n">bin_func</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">n_lags</span> <span class="o">=</span> <span class="n">n_lags</span><span class="p">,</span> 
+                   <span class="n">maxlag</span> <span class="o">=</span> <span class="n">maxlag</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># cluster 1 variogram</span>
+<span class="n">df1</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">coords1</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">values1</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">]</span>
+<span class="n">V1</span> <span class="o">=</span> <span class="n">skg</span><span class="o">.</span><span class="n">Variogram</span><span class="p">(</span><span class="n">coords1</span><span class="p">,</span> <span class="n">values1</span><span class="p">,</span> <span class="n">bin_func</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">n_lags</span> <span class="o">=</span> <span class="n">n_lags</span><span class="p">,</span> 
+                   <span class="n">maxlag</span> <span class="o">=</span> <span class="n">maxlag</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+
+<span class="c1"># cluster 2 variogram</span>
+<span class="n">df2</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;K&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">coords2</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[[</span><span class="s1">&#39;X&#39;</span><span class="p">,</span><span class="s1">&#39;Y&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+<span class="n">values2</span> <span class="o">=</span> <span class="n">df2</span><span class="p">[</span><span class="s1">&#39;Nbed&#39;</span><span class="p">]</span>
+<span class="n">V2</span> <span class="o">=</span> <span class="n">skg</span><span class="o">.</span><span class="n">Variogram</span><span class="p">(</span><span class="n">coords2</span><span class="p">,</span> <span class="n">values2</span><span class="p">,</span> <span class="n">bin_func</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span><span class="p">,</span> <span class="n">n_lags</span> <span class="o">=</span> <span class="n">n_lags</span><span class="p">,</span> 
+                   <span class="n">maxlag</span> <span class="o">=</span> <span class="n">maxlag</span><span class="p">,</span> <span class="n">normalize</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variograms</span> <span class="o">=</span> <span class="p">[</span><span class="n">V0</span><span class="p">,</span> <span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">V</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">variograms</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">bins</span><span class="p">,</span><span class="n">V</span><span class="o">.</span><span class="n">experimental</span><span class="p">,</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="n">color</span> <span class="o">=</span> <span class="s1">&#39;red&#39;</span><span class="p">,</span><span class="n">label</span> <span class="o">=</span> <span class="s1">&#39;Bed&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">50_000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Lag Distance $\bf(h)$, [m]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\gamma \bf(h)$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> experimental variogram&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">50_000</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_10_0.png" src="_images/7_non-stationary_SGS_example1_10_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># fit variogram model</span>
+<span class="c1"># use exponential variogram model</span>
+<span class="n">V0</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;exponential&#39;</span> 
+<span class="n">V1</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;exponential&#39;</span> 
+<span class="n">V2</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;exponential&#39;</span> 
+
+<span class="c1"># create array of evenly spaced lag values to evaluate</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">lagh</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">30000</span><span class="p">,</span><span class="n">n</span><span class="p">)</span>
+
+<span class="n">range0</span> <span class="o">=</span> <span class="n">V0</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">sill0</span> <span class="o">=</span> <span class="n">V0</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">range1</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">sill1</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">range2</span> <span class="o">=</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">];</span> <span class="n">sill2</span> <span class="o">=</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+<span class="n">y0</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">range0</span><span class="p">,</span> <span class="n">sill0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">lagh</span><span class="p">]</span>
+<span class="n">y1</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="n">sill1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">lagh</span><span class="p">]</span>
+<span class="n">y2</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">range2</span><span class="p">,</span> <span class="n">sill2</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">lagh</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">variograms</span> <span class="o">=</span> <span class="p">[</span><span class="n">V0</span><span class="p">,</span> <span class="n">V1</span><span class="p">,</span> <span class="n">V2</span><span class="p">]</span>
+<span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">y0</span><span class="p">,</span> <span class="n">y1</span><span class="p">,</span> <span class="n">y2</span><span class="p">]</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">ax</span><span class="p">,</span> <span class="n">V</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">axs</span><span class="p">,</span> <span class="n">variograms</span><span class="p">,</span> <span class="n">ys</span><span class="p">)):</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">V</span><span class="o">.</span><span class="n">bins</span><span class="p">,</span> <span class="n">V</span><span class="o">.</span><span class="n">experimental</span><span class="p">,</span> <span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;red&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Bed&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">lagh</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;blue&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Modeled variogram&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">hlines</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">xmin</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">xmax</span><span class="o">=</span><span class="mi">30_000</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;black&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;Lag Distance $\bf(h)$, [m]&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;$\gamma \bf(h)$&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Cluster </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1"> variogram&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">30_000</span><span class="p">])</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_12_0.png" src="_images/7_non-stationary_SGS_example1_12_0.png" />
+</div>
+</div>
+</section>
+<section id="simulate-with-sgs">
+<h2>Simulate with SGS<a class="headerlink" href="#simulate-with-sgs" title="Permalink to this headline">#</a></h2>
+<p>Next we will implement SGS with multiple variograms. This function is very similar to the original SGS. However, each time a grid cell is simulated, the nearest neighbor k-cluster value is used to select the variogram that is used for that point. This is done as follows:</p>
+<p>For each grid cell in a random path:</p>
+<ol class="simple">
+<li><p>Find the nearest neighbors in the conditioning data, and determine which cluster the nearest point belongs to.</p></li>
+<li><p>Look up the variogram parameters associated with that cluster.</p></li>
+<li><p>Use simple kriging to estimate the mean and variance.</p></li>
+<li><p>Sample from the distribution defined by the mean and variance. This is the simulated value.</p></li>
+<li><p>Append the simulated value to the conditioning data, and give it the same cluster number that was found in Step 2.</p></li>
+<li><p>Repeat steps 1-5 until every grid cell is simulated.</p></li>
+</ol>
+<p>Note that the SGS clustering function (cluster_SGS) uses simple kriging. There is no ordinary kriging option.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># define coordinate grid</span>
+<span class="n">xmin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">]);</span> <span class="n">xmax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">])</span>     <span class="c1"># min and max x values</span>
+<span class="n">ymin</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">]);</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">df_grid</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">])</span>     <span class="c1"># min and max y values</span>
+
+<span class="n">Pred_grid_xy</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Gridding</span><span class="o">.</span><span class="n">prediction_grid</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make a dataframe with variogram parameters</span>
+<span class="n">azimuth</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># nugget effect</span>
+<span class="n">nug</span> <span class="o">=</span> <span class="mi">0</span> 
+
+<span class="c1"># define variograms for each cluster</span>
+<span class="c1"># Azimuth, nugget, major range, minor range, sill</span>
+<span class="n">gam0</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range0</span><span class="p">,</span> <span class="n">range0</span><span class="p">,</span> <span class="n">sill0</span><span class="p">]</span>
+<span class="n">gam1</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="n">sill1</span><span class="p">]</span>
+<span class="n">gam2</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range2</span><span class="p">,</span> <span class="n">range2</span><span class="p">,</span> <span class="n">sill2</span><span class="p">]</span>
+
+<span class="c1"># store variogram parameters</span>
+<span class="n">df_gamma</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Variogram&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">gam0</span><span class="p">,</span> <span class="n">gam1</span><span class="p">,</span> <span class="n">gam2</span><span class="p">]})</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell tag_remove-output docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulate</span>
+
+<span class="n">k</span> <span class="o">=</span> <span class="mi">100</span>            <span class="c1"># number of neighboring data points used to estimate a given point </span>
+<span class="n">rad</span> <span class="o">=</span> <span class="mi">50000</span>        <span class="c1"># 50 km search radius</span>
+
+<span class="n">sgs</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">cluster_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nbed&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">df_gamma</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="c1"># reverse normal score transformation</span>
+<span class="n">sgs</span> <span class="o">=</span> <span class="n">sgs</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sgs_trans</span> <span class="o">=</span> <span class="n">nst_trans</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">sgs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make hillshade for visualizing</span>
+<span class="n">mplot1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">sgs_trans</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;SGS with clusters&#39;</span><span class="p">,</span> <span class="n">hillshade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_17_0.png" src="_images/7_non-stationary_SGS_example1_17_0.png" />
+</div>
+</div>
+<p>You can see that some regions appear rougher than others. We can also change the Azimuth and anisotropy in different clusters:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># simulation demo #2</span>
+
+<span class="c1"># define variograms for each cluster</span>
+<span class="n">gam0</span> <span class="o">=</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range0</span>  <span class="o">+</span> <span class="mi">15000</span><span class="p">,</span> <span class="n">range0</span><span class="p">,</span> <span class="n">sill0</span><span class="p">]</span>                  <span class="c1"># create anisotropy</span>
+<span class="n">gam1</span> <span class="o">=</span> <span class="p">[</span><span class="n">azimuth</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="n">range1</span><span class="p">,</span> <span class="mf">.6</span><span class="p">]</span>                     <span class="c1"># change the sill</span>
+<span class="n">gam2</span> <span class="o">=</span> <span class="p">[</span><span class="mi">90</span><span class="p">,</span> <span class="n">nug</span><span class="p">,</span> <span class="n">range2</span> <span class="o">+</span> <span class="mi">15000</span><span class="p">,</span> <span class="n">range2</span><span class="p">,</span> <span class="n">sill2</span><span class="p">]</span>                   <span class="c1"># create anisotropy</span>
+<span class="n">df_gamma</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;Variogram&#39;</span><span class="p">:</span> <span class="p">[</span><span class="n">gam0</span><span class="p">,</span> <span class="n">gam1</span><span class="p">,</span> <span class="n">gam2</span><span class="p">]})</span>    <span class="c1"># store variogram parameters</span>
+
+<span class="n">sgs2</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Interpolation</span><span class="o">.</span><span class="n">cluster_sgs</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">df_grid</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Nbed&#39;</span><span class="p">,</span> <span class="s1">&#39;K&#39;</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">df_gamma</span><span class="p">,</span> <span class="n">rad</span><span class="p">)</span> 
+
+<span class="c1"># reverse normal score transformation</span>
+<span class="n">sgs2</span> <span class="o">=</span> <span class="n">sgs2</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">sgs2_trans</span> <span class="o">=</span> <span class="n">nst_trans</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span><span class="n">sgs2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|████████████████████████████████████| 22500/22500 [03:02&lt;00:00, 123.18it/s]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># make hillshade for visualizing</span>
+<span class="n">mplot1</span><span class="p">(</span><span class="n">Pred_grid_xy</span><span class="p">,</span> <span class="n">sgs2_trans</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;SGS with clusters and anisotropy&#39;</span><span class="p">,</span> <span class="n">hillshade</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/7_non-stationary_SGS_example1_20_0.png" src="_images/7_non-stationary_SGS_example1_20_0.png" />
+</div>
+</div>
+<p>There are some visible differences in the topography orientation.</p>
+<p>Download the tutorial <code class="xref download docutils literal notranslate"><span class="pre">here</span></code>.</p>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            kernelName: "python3",
+            path: "./."
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="6_interpolation_with_anisotropy.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Interpolation with anisotropy</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="8_non-stationary_SGS_example2.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Non-stationary SGS with adaptive partitioning</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Emma MacKie, Michael Field, Lijing Wang, Nathan Schoedl, and Matthew Hibbs<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
