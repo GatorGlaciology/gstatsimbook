@@ -161,6 +161,11 @@ const thebe_selector_output = ".output, .cell_output"
    Interpolation with a trend
   </a>
  </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="9_cokriging_and_cosimulation_MM1.html">
+   Co-kriging and co-SGS with Markov Model 1 (MM1)
+  </a>
+ </li>
 </ul>
 
     </div>
@@ -220,7 +225,7 @@ title="Toggle navigation"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://mybinder.org/v2/gh/executablebooks/jupyter-book/master?urlpath=tree/docs/2_Variogram_model.ipynb"
+        <a href="https://mybinder.org/v2/gh/GatorGlaciology/gstatsimbook/master?urlpath=tree/2_Variogram_model.ipynb"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -263,7 +268,7 @@ title="Fullscreen mode"
   <div class="menu-dropdown__content">
     <ul>
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book"
+        <a href="https://github.com/GatorGlaciology/gstatsimbook"
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -280,7 +285,7 @@ title="Source repository"
       </li>
       
       <li>
-        <a href="https://github.com/executablebooks/jupyter-book/issues/new?title=Issue%20on%20page%20%2F2_Variogram_model.html&body=Your%20issue%20content%20here."
+        <a href="https://github.com/GatorGlaciology/gstatsimbook/issues/new?title=Issue%20on%20page%20%2F2_Variogram_model.html&body=Your%20issue%20content%20here."
    class="headerbtn"
    data-toggle="tooltip"
 data-placement="left"
@@ -447,9 +452,6 @@ title="Print to PDF"
 <span class="kn">import</span> <span class="nn">skgstat</span> <span class="k">as</span> <span class="nn">skg</span>
 <span class="kn">from</span> <span class="nn">skgstat</span> <span class="kn">import</span> <span class="n">models</span>
 <span class="kn">import</span> <span class="nn">gstatsim</span> <span class="k">as</span> <span class="nn">gs</span>
-
-<span class="c1"># plot utility functions</span>
-<span class="kn">from</span> <span class="nn">plot_utils</span> <span class="kn">import</span> <span class="n">splot2D</span>
 </pre></div>
 </div>
 </div>
@@ -463,8 +465,22 @@ title="Print to PDF"
 <span class="c1"># remove erroneously high values due to bad bed picks</span>
 <span class="n">df_bed</span> <span class="o">=</span> <span class="n">df_bed</span><span class="p">[</span><span class="n">df_bed</span><span class="p">[</span><span class="s2">&quot;Bed&quot;</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="mi">700</span><span class="p">]</span>  
 
-<span class="c1"># use convenience plotting function</span>
-<span class="n">splot2D</span><span class="p">(</span><span class="n">df</span><span class="o">=</span><span class="n">df_bed</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Original bed data&#39;</span><span class="p">)</span>
+<span class="c1"># plot data</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">5</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">gca</span><span class="p">()</span>
+<span class="n">im</span> <span class="o">=</span> <span class="n">ax</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;X&#39;</span><span class="p">],</span> <span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;Y&#39;</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">df_bed</span><span class="p">[</span><span class="s1">&#39;Bed&#39;</span><span class="p">],</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">400</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">600</span><span class="p">,</span> 
+                     <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;gist_earth&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Subglacial topography data&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;X [m]&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Y [m]&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">locator_params</span><span class="p">(</span><span class="n">nbins</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">&#39;scaled&#39;</span><span class="p">)</span>
+
+<span class="c1"># make colorbar</span>
+<span class="n">divider</span> <span class="o">=</span> <span class="n">make_axes_locatable</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+<span class="n">cax</span> <span class="o">=</span> <span class="n">divider</span><span class="o">.</span><span class="n">append_axes</span><span class="p">(</span><span class="s1">&#39;right&#39;</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s1">&#39;5%&#39;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">cbar</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">im</span><span class="p">,</span> <span class="n">ticks</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="mi">400</span><span class="p">,</span> <span class="mi">600</span><span class="p">,</span> <span class="mi">11</span><span class="p">),</span> <span class="n">cax</span><span class="o">=</span><span class="n">cax</span><span class="p">)</span>
+<span class="n">cbar</span><span class="o">.</span><span class="n">set_label</span><span class="p">(</span><span class="s2">&quot;Bed elevation [m]&quot;</span><span class="p">,</span> <span class="n">rotation</span><span class="o">=</span><span class="mi">270</span><span class="p">,</span> <span class="n">labelpad</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -477,7 +493,7 @@ title="Print to PDF"
 <h2>Normal score transformation and experimental variogram<a class="headerlink" href="#normal-score-transformation-and-experimental-variogram" title="Permalink to this headline">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># grid data to 100 m resolution and remove coordinates with NaNs</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># grid data to 1000 m resolution and remove coordinates with NaNs</span>
 <span class="n">res</span> <span class="o">=</span> <span class="mi">1000</span>
 <span class="n">df_grid</span><span class="p">,</span> <span class="n">grid_matrix</span><span class="p">,</span> <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="n">gs</span><span class="o">.</span><span class="n">Gridding</span><span class="o">.</span><span class="n">grid_data</span><span class="p">(</span><span class="n">df_bed</span><span class="p">,</span> <span class="s1">&#39;X&#39;</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">,</span> <span class="s1">&#39;Bed&#39;</span><span class="p">,</span> <span class="n">res</span><span class="p">)</span>
 <span class="n">df_grid</span> <span class="o">=</span> <span class="n">df_grid</span><span class="p">[</span><span class="n">df_grid</span><span class="p">[</span><span class="s2">&quot;Z&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()</span> <span class="o">==</span> <span class="kc">False</span><span class="p">]</span>
@@ -528,29 +544,124 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[31852.81334061251, 0.702748224072384, 0]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[31852.813443811916, 0.7027482245687205, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<p>The outputs are the range, sill, and nugget, respectively. The SciKit-GStat has a default nugget of 0 unless specified (see SciKit-GStat documentation).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use Gaussian model</span>
+<span class="n">V2</span> <span class="o">=</span> <span class="n">V1</span>
+<span class="n">V2</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;gaussian&#39;</span> 
+<span class="n">V2</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[13941.920319868268, 0.6297877208512457, 0]
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># use spherical model</span>
+<span class="n">V3</span> <span class="o">=</span> <span class="n">V1</span>
+<span class="n">V3</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="s1">&#39;spherical&#39;</span> 
+<span class="n">V3</span><span class="o">.</span><span class="n">parameters</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[20826.484506950972, 0.6530605718987791, 0]
 </pre></div>
 </div>
 </div>
 </div>
 <p>These values are the range, sill, and nugget, respectively. The range describes the correlation length, or distance where two measurements are no longer correlated The sill is variance where the range is reached. The nugget is the variance at a lag distance of zero.</p>
 <p>The nugget effect is often attributed to measurement error (i.e., a non-zero nugget results from measurements with different values at the same location). We have a nugget of zero because our data is gridded. Depending on the analysis, it can be useful to work with non-gridded data in order to investigate the nugget effect and measurement uncertainty. For certain interpolation problems, it is best to have a nugget of zero, while sometimes it is useful to include the nugget.</p>
-<p>Now we will create the variogram model. While there are many different variogram model types (see SCiKit-GStat documentation), GStatSim uses the exponential variogram model, which is the most widely used:</p>
+<p>Now we will create the variogram model. There are many different types of variogram models (see SCiKit-GStat documentation). GStatSim has options for exponential, Gaussian, and spherical variogram models. The exponential variogram is:</p>
 <div class="math notranslate nohighlight">
 \[
-\gamma(h) = b + (c - b)[1 - exp^{(-\frac{3h}{a})}]
+\gamma_{exp}(h) = b + (c - b)[1 - exp^{(-\frac{3h}{a})}]
 \]</div>
-<p>where <span class="math notranslate nohighlight">\(b\)</span> is the nugget, <span class="math notranslate nohighlight">\(h\)</span> is the lag distance, <span class="math notranslate nohighlight">\(c\)</span> is the sill, and <span class="math notranslate nohighlight">\(a\)</span> is the range. Note that the SCiKit-GStat variogram modeling defaults assign a nugget of 0.</p>
+<p>where <span class="math notranslate nohighlight">\(b\)</span> is the nugget, <span class="math notranslate nohighlight">\(h\)</span> is the lag distance, <span class="math notranslate nohighlight">\(c\)</span> is the sill, and <span class="math notranslate nohighlight">\(a\)</span> is the range. Note that the SCiKit-GStat variogram modeling defaults assign a nugget of 0. The Gaussian variogram is:</p>
+<div class="math notranslate nohighlight">
+\[
+\gamma_{Gauss}(h) = b + (c - b)[1 - exp^{(-\frac{3h^2}{a^2})}].
+\]</div>
+<p>And the spherical variogram is:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\gamma_{sph}(h) = \begin{cases} b + (c - b)[1.5*\frac{h}{a} - 0.5*\frac{h^3}{a^3}] &amp; \text{if $0&lt;h \leq a$}\\
+    c &amp; \text{if $h &gt; a$}
+\end{cases}.
+\end{split}\]</div>
+<p>These different variogram model types all have different properties, and some are better at modeling certain data sets than others. In practice, it’s good to try fitting different variogram models to the data and determine which one fits best.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># set variogram parameters</span>
-<span class="n">vrange</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">vsill</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">vnugget</span> <span class="o">=</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># evaluate models</span>
+<span class="n">xi</span> <span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xdata</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">100</span><span class="p">)</span> 
 
-<span class="c1"># evaluate models</span>
-<span class="n">xi</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">xdata</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="mi">1000</span><span class="p">)</span> 
-<span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">vrange</span><span class="p">,</span> <span class="n">vsill</span><span class="p">,</span> <span class="n">vnugget</span><span class="p">)</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="n">y_sph</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">spherical</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">KeyboardInterrupt</span><span class="g g-Whitespace">                         </span>Traceback (most recent call last)
+<span class="o">/</span><span class="n">var</span><span class="o">/</span><span class="n">folders</span><span class="o">/</span><span class="mi">3</span><span class="n">d</span><span class="o">/</span><span class="n">s79lt6q910z0whw_7c_z48lc0000gp</span><span class="o">/</span><span class="n">T</span><span class="o">/</span><span class="n">ipykernel_18156</span><span class="o">/</span><span class="mf">160046587.</span><span class="n">py</span> <span class="ow">in</span> <span class="o">&lt;</span><span class="n">module</span><span class="o">&gt;</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> 
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">y_sph</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">spherical</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+
+<span class="nn">/var/folders/3d/s79lt6q910z0whw_7c_z48lc0000gp/T/ipykernel_18156/160046587.py</span> in <span class="ni">&lt;listcomp&gt;</span><span class="nt">(.0)</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span> 
+<span class="g g-Whitespace">      </span><span class="mi">4</span> <span class="n">y_exp</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">exponential</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V1</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="ne">----&gt; </span><span class="mi">5</span> <span class="n">y_gauss</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V2</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span> <span class="n">y_sph</span> <span class="o">=</span> <span class="p">[</span><span class="n">models</span><span class="o">.</span><span class="n">spherical</span><span class="p">(</span><span class="n">h</span><span class="p">,</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">V3</span><span class="o">.</span><span class="n">parameters</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">for</span> <span class="n">h</span> <span class="ow">in</span> <span class="n">xi</span><span class="p">]</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/skgstat/Variogram.py</span> in <span class="ni">parameters</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2399</span> 
+<span class="g g-Whitespace">   </span><span class="mi">2400</span>         <span class="sd">&quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">2401</span><span class="sd">         d = self.describe()</span>
+<span class="g g-Whitespace">   </span><span class="mi">2402</span><span class="sd">         if &#39;error&#39; in d:</span>
+<span class="g g-Whitespace">   </span><span class="mi">2403</span><span class="sd">             return [None, None, None]</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/skgstat/Variogram.py</span> in <span class="ni">describe</span><span class="nt">(self, short, flat)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2321</span><span class="sd">         # scale sill and range</span>
+<span class="g g-Whitespace">   </span><span class="mi">2322</span><span class="sd">         maxlag = np.nanmax(self.bins)</span>
+<span class="ne">-&gt; </span><span class="mi">2323</span><span class="sd">         maxvar = np.nanmax(self.experimental)</span>
+<span class="g g-Whitespace">   </span><span class="mi">2324</span><span class="sd"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">2325</span><span class="sd">         # get the fitting coefficents</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/skgstat/Variogram.py</span> in <span class="ni">experimental</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1760</span><span class="sd"> </span>
+<span class="g g-Whitespace">   </span><span class="mi">1761</span><span class="sd">         &quot;&quot;&quot;</span>
+<span class="ne">-&gt; </span><span class="mi">1762</span>         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_experimental</span>
+<span class="g g-Whitespace">   </span><span class="mi">1763</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1764</span>     <span class="nd">@property</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/skgstat/Variogram.py</span> in <span class="ni">_experimental</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1810</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1811</span>         <span class="c1"># return the mapped result</span>
+<span class="ne">-&gt; </span><span class="mi">1812</span>         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">fromiter</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="n">mapper</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">lag_classes</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1813</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1814</span>     <span class="k">def</span> <span class="nf">get_empirical</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bin_center</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="nn">~/opt/anaconda3/lib/python3.9/site-packages/skgstat/Variogram.py</span> in <span class="ni">lag_classes</span><span class="nt">(self)</span>
+<span class="g g-Whitespace">   </span><span class="mi">1354</span>         <span class="c1"># yield all groups</span>
+<span class="g g-Whitespace">   </span><span class="mi">1355</span>         <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bins</span><span class="p">)):</span>
+<span class="ne">-&gt; </span><span class="mi">1356</span>             <span class="k">yield</span> <span class="bp">self</span><span class="o">.</span><span class="n">_diff</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lag_groups</span><span class="p">()</span> <span class="o">==</span> <span class="n">i</span><span class="p">)]</span>
+<span class="g g-Whitespace">   </span><span class="mi">1357</span> 
+<span class="g g-Whitespace">   </span><span class="mi">1358</span>     <span class="k">def</span> <span class="nf">preprocessing</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">force</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+
+<span class="ne">KeyboardInterrupt</span>: 
 </pre></div>
 </div>
 </div>
@@ -558,20 +669,26 @@ title="Print to PDF"
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot variogram model</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="p">,</span> <span class="n">ydata</span><span class="p">,</span><span class="s1">&#39;og&#39;</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Experimental variogram&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="p">,</span> <span class="n">y_exp</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Modeled variogram&#39;</span><span class="p">)</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xdata</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span><span class="n">ydata</span><span class="p">,</span><span class="s1">&#39;og&#39;</span><span class="p">,</span> <span class="n">label</span> <span class="o">=</span> <span class="s2">&quot;Experimental variogram&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">y_gauss</span><span class="p">,</span><span class="s1">&#39;b--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Gaussian variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">y_exp</span><span class="p">,</span><span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Exponential variogram&#39;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xi</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">y_sph</span><span class="p">,</span><span class="s1">&#39;b*-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Spherical variogram&#39;</span><span class="p">)</span>
 <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Isotropic variogram&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lag [m]&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Semivariance&#39;</span><span class="p">)</span>  
-<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;upper left&#39;</span><span class="p">)</span>
-<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;Lag [km]&#39;</span><span class="p">);</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;Semivariance&#39;</span><span class="p">)</span>  
+<span class="n">plt</span><span class="o">.</span><span class="n">subplots_adjust</span><span class="p">(</span><span class="n">left</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">bottom</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">right</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span> <span class="c1"># adjust the plot size</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s1">&#39;lower right&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="_images/2_Variogram_model_10_0.png" src="_images/2_Variogram_model_10_0.png" />
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;matplotlib.legend.Legend at 0x7fd2f6f1a6d0&gt;
+</pre></div>
+</div>
+<img alt="_images/2_Variogram_model_13_1.png" src="_images/2_Variogram_model_13_1.png" />
 </div>
 </div>
+<p>By looking at the variogram models, we can see that the exponential model fits the best. As such, we will use the exponential variogram model type to perform interpolations.</p>
 <p>For anisotropic variograms, the variogram should be modeled in the major (smoothest) and minor (roughest) directions, which are typicaly orthogonal to each other.</p>
 <p>Now that the variogram is modeled, we can use this information to perform interpolations.</p>
 <p>Download the tutorial <a class="reference download internal" download="" href="_downloads/ab9f9507714feb3195cd72b4026e1e67/2_Variogram_model.ipynb"><code class="xref download docutils literal notranslate"><span class="pre">here</span></code></a>.</p>
