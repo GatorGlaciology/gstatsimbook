@@ -861,7 +861,7 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 99%|████████████████████████████████████▌| 22207/22500 [04:23&lt;00:03, 76.31it/s]
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████████████████████████████████| 22500/22500 [04:34&lt;00:00, 82.05it/s]
 </pre></div>
 </div>
 </div>
@@ -904,6 +904,9 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="_images/10_cokriging_and_cosimulation_MM1_25_0.png" src="_images/10_cokriging_and_cosimulation_MM1_25_0.png" />
 </div>
 </div>
 <p>Looks good! Compared to the previous simulation examples, the topography on the right is higher elevation.</p>
@@ -951,6 +954,9 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="_images/10_cokriging_and_cosimulation_MM1_28_0.png" src="_images/10_cokriging_and_cosimulation_MM1_28_0.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -959,6 +965,11 @@ E(Z_2(u) | Z_1(u) = z_1, Z_1(u') = z_1(u')) = E(Z_2(u) | Z_1(u) = z_1)
 <span class="n">rho12</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">corrcoef</span><span class="p">(</span><span class="n">cosim</span><span class="p">,</span><span class="n">df_surface_grid</span><span class="p">[</span><span class="s1">&#39;Nsurf&#39;</span><span class="p">])</span> <span class="c1"># compute correlation coefficient</span>
 <span class="n">corrcoef</span> <span class="o">=</span> <span class="n">rho12</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">]</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Correlation coefficient between simulated bed and surface: &#39;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">corrcoef</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Correlation coefficient between simulated bed and surface: 0.684449625918801
 </pre></div>
 </div>
 </div>
